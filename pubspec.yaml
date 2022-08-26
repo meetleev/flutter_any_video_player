@@ -1,7 +1,7 @@
 name: any_video_player
-description: A new Flutter project.
+description: Advanced video player based on video_player and Chewie.
 version: 0.0.1
-homepage:
+homepage: https://github.com/GLeeWei/any_video_player
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
