@@ -20,10 +20,11 @@ class AnyVideoPlayerState extends State<AnyVideoPlayer> {
     super.initState();
   }
 
-  _initializeVideo(){
+  _initializeVideo() {
     if (!widget.controller.videoPlayerController.value.isInitialized) {
-      widget.controller.videoPlayerController.initialize().then((value) => setState(() {
-      }));
+      widget.controller.videoPlayerController
+          .initialize()
+          .then((value) => setState(() {}));
     }
   }
 

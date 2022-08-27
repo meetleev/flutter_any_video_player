@@ -1,6 +1,6 @@
 name: any_video_player
-description: Advanced video player based on video_player and Chewie.
-version: 0.0.1
+description: The video_player plugin gives low level access for the video playback. Advanced video player based on video_player and Chewie.
+version: 0.0.2
 homepage: https://github.com/GLeeWei/any_video_player
 
 environment:

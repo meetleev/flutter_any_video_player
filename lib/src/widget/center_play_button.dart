@@ -67,7 +67,8 @@ class AnimatedPlayPause extends StatefulWidget {
   State<StatefulWidget> createState() => AnimatedPlayPauseState();
 }
 
-class AnimatedPlayPauseState extends State<AnimatedPlayPause> with SingleTickerProviderStateMixin {
+class AnimatedPlayPauseState extends State<AnimatedPlayPause>
+    with SingleTickerProviderStateMixin {
   late final animationController = AnimationController(
     vsync: this,
     value: widget.playing ? 1 : 0,
@@ -125,7 +126,8 @@ class AdaptiveButton extends StatelessWidget {
   /// See [Icon], [ImageIcon].
   final Widget icon;
 
-  const AdaptiveButton({super.key, this.iconSize, this.onPressed, required this.icon});
+  const AdaptiveButton(
+      {super.key, this.iconSize, this.onPressed, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +135,8 @@ class AdaptiveButton extends StatelessWidget {
       case TargetPlatform.android:
         return IconButton(iconSize: iconSize, onPressed: onPressed, icon: icon);
       case TargetPlatform.iOS:
-        return CupertinoButton(minSize: iconSize, onPressed: onPressed, child: icon);
+        return CupertinoButton(
+            minSize: iconSize, onPressed: onPressed, child: icon);
       default:
         return IconButton(iconSize: iconSize, onPressed: onPressed, icon: icon);
     }

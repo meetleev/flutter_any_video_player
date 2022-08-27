@@ -52,9 +52,17 @@ double calculateAspectRatio(BuildContext context) {
   return width > height ? width / height : height / width;
 }
 
+double calculateVideo2ScreenWidthRatio(BuildContext context, Size videoSize, {MediaQueryData? mediaData}) {
+  if (videoSize.isEmpty) return 0;
+  mediaData ??= MediaQuery.of(context);
+  final orientation = mediaData.orientation;
+  final width = orientation == Orientation.portrait ? mediaData.size.width : mediaData.size.height;
+  return width * mediaData.devicePixelRatio / videoSize.width;
+}
+
 double calculateVideo2ScreenHeightOffset(BuildContext context, Size videoSize, {MediaQueryData? mediaData}) {
   if (videoSize.isEmpty) return 0;
-  mediaData  ??= MediaQuery.of(context);
+  mediaData ??= MediaQuery.of(context);
   final orientation = mediaData.orientation;
   final width = orientation == Orientation.portrait ? mediaData.size.width : mediaData.size.height;
   final height = orientation == Orientation.portrait ? mediaData.size.height : mediaData.size.width;

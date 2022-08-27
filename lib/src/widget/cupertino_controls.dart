@@ -23,12 +23,15 @@ class CupertinoControls extends StatefulWidget {
 
 class CupertinoControlsState extends State<CupertinoControls> {
   final marginSize = 5.0;
+
   AnyVideoPlayerController? _anyVPController;
 
   AnyVideoPlayerController get anyVPController => _anyVPController!;
-  VideoPlayerController? _controller;
 
-  VideoPlayerController get controller => _controller!;
+  VideoPlayerController get controller => anyVPController.videoPlayerController;
+
+  ControlsConfiguration get controlsConf => anyVPController.controlsConfiguration;
+
   bool _wasLoading = false;
   late VideoPlayerNotifier notifier;
   Timer? _hideControlsTimer;
@@ -47,8 +50,10 @@ class CupertinoControlsState extends State<CupertinoControls> {
     final orientation = mediaData.orientation;
     final barHeight = orientation == Orientation.portrait ? 30.0 : 47.0;
     final videoSize = anyVPController.videoPlayerController.value.size;
-    final offset = calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData);
-    var bottom = anyVPController.bottomBarConf.paddingBottom + offset / 2;
+    final offset = controlsConf.autoAlignVideoBottom
+        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
+        : 0;
+    var bottom = controlsConf.paddingBottom + offset / 2;
     return GestureDetector(
       onTap: () => _restartControlsTimer(),
       child: AbsorbPointer(
@@ -79,7 +84,6 @@ class CupertinoControlsState extends State<CupertinoControls> {
   void didChangeDependencies() {
     final oldAnyVideoPlayerController = _anyVPController;
     _anyVPController = AnyVideoPlayerController.of(context);
-    _controller = anyVPController.videoPlayerController;
     if (oldAnyVideoPlayerController != _anyVPController) {
       _dispose();
       _initialize();
@@ -142,8 +146,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
         }
       },
       child: CenterPlayButton(
-        backgroundColor: anyVPController.bottomBarConf.cupertinoBackgroundColor,
-        iconColor: anyVPController.bottomBarConf.cupertinoIconColor,
+        backgroundColor: controlsConf.cupertinoBackgroundColor,
+        iconColor: controlsConf.cupertinoIconColor,
         isFinished: isFinished,
         isPlaying: controller.value.isPlaying,
         show: showPlayButton,
@@ -153,7 +157,7 @@ class CupertinoControlsState extends State<CupertinoControls> {
   }
 
   Widget _buildBottomBar(double barHeight) {
-    final iconColor = anyVPController.bottomBarConf.cupertinoIconColor;
+    final iconColor = controlsConf.cupertinoIconColor;
     return SafeArea(
         bottom: anyVPController.isFullScreen,
         child: AnimatedOpacity(
@@ -169,7 +173,7 @@ class CupertinoControlsState extends State<CupertinoControls> {
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Container(
                     height: barHeight,
-                    color: anyVPController.bottomBarConf.cupertinoBackgroundColor,
+                    color: controlsConf.cupertinoBackgroundColor,
                     child: anyVPController.isLive
                         ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             _buildLive(iconColor),
@@ -220,7 +224,7 @@ class CupertinoControlsState extends State<CupertinoControls> {
 
             _startHideControlsTimer();
           },
-          colors: anyVPController.bottomBarConf.cupertinoProgressColors ??
+          colors: controlsConf.cupertinoProgressColors ??
               AnyVideoProgressColors(
                 playedColor: const Color.fromARGB(
                   120,

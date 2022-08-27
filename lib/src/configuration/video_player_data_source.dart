@@ -8,7 +8,7 @@ enum VideoPlayerDataSourceType {
   network,
 
   /// The video was loaded off of the local filesystem.
-  // file,
+  file,
 
   /// The video was loaded off of the memory.
   // memory,
@@ -63,6 +63,15 @@ class VideoPlayerDataSource {
     this.videoPlayerOptions,
     this.closedCaptionFile,
   })  : type = VideoPlayerDataSourceType.asset,
+        videoFormat = null,
+        headers = const {};
+
+  VideoPlayerDataSource.file(
+    this.url, {
+    this.videoPlayerOptions,
+    this.closedCaptionFile,
+  })  : type = VideoPlayerDataSourceType.file,
+        package = null,
         videoFormat = null,
         headers = const {};
 }

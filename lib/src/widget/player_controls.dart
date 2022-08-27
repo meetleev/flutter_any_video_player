@@ -17,14 +17,14 @@ class PlayerControls extends StatefulWidget {
 class PlayerControlsState extends State<PlayerControls> {
   @override
   Widget build(BuildContext context) {
-    final iconColor = Theme.of(context).textTheme.bodyLarge!.backgroundColor;
+    final backgroundColor = Theme.of(context).textTheme.bodyLarge!.backgroundColor;
     final AnyVideoPlayerController controller = widget.controller;
     double? aspectRatio;
     if (controller.isFullScreen) {}
     aspectRatio ??= 16 / 9;
     return Center(
       child: Container(
-        color: iconColor,
+        color: controller.backgroundColor ?? backgroundColor,
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: AspectRatio(
@@ -85,8 +85,8 @@ class PlayerControlsState extends State<PlayerControls> {
       // case TargetPlatform.windows:
       // case TargetPlatform.linux:
       //   return const MaterialDesktopControls();
-      case TargetPlatform.iOS:
-        return const CupertinoControls();
+      // case TargetPlatform.iOS:
+      // return const CupertinoControls();
       default:
         return const MaterialControls();
     }

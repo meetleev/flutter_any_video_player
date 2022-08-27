@@ -12,7 +12,6 @@ import '../utils.dart';
 import 'progress_bar_adapter.dart';
 
 class MaterialControls extends StatefulWidget {
-
   const MaterialControls({super.key});
 
   @override
@@ -20,13 +19,13 @@ class MaterialControls extends StatefulWidget {
 }
 
 class MaterialControlsState extends State<MaterialControls> {
-  final barHeight = 48.0 * 1.5;
   AnyVideoPlayerController? _anyVPController;
 
   AnyVideoPlayerController get anyVPController => _anyVPController!;
-  VideoPlayerController? _controller;
 
-  VideoPlayerController get controller => _controller!;
+  VideoPlayerController get controller => anyVPController.videoPlayerController;
+
+  ControlsConfiguration get controlsConf => anyVPController.controlsConfiguration;
   bool _wasLoading = false;
   late VideoPlayerNotifier notifier;
   Timer? _hideControlsTimer;
@@ -42,9 +41,14 @@ class MaterialControlsState extends State<MaterialControls> {
   @override
   Widget build(BuildContext context) {
     final mediaData = MediaQuery.of(context);
-    final videoSize = anyVPController.videoPlayerController.value.size;
-    final offset = calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData);
-    var bottom = anyVPController.bottomBarConf.paddingBottom + offset / 2;
+    final videoSize = controller.value.size;
+    final offset = controlsConf.autoAlignVideoBottom
+        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
+        : 0;
+    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize, mediaData: mediaData);
+    final barHeight = 48.0 * 1.5 * (0 < widthScale ? widthScale : 1);
+    var bottom = controlsConf.paddingBottom + offset / 2;
+    final iconColor = Theme.of(context).textTheme.button!.color;
     return GestureDetector(
       onTap: () => _restartControlsTimer(),
       child: AbsorbPointer(
@@ -61,7 +65,7 @@ class MaterialControlsState extends State<MaterialControls> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  _buildBottomBar(),
+                  _buildBottomBar(iconColor, barHeight),
                 ],
               ),
             ),
@@ -75,7 +79,6 @@ class MaterialControlsState extends State<MaterialControls> {
   void didChangeDependencies() {
     final oldAnyVideoPlayerController = _anyVPController;
     _anyVPController = AnyVideoPlayerController.of(context);
-    _controller = anyVPController.videoPlayerController;
     if (oldAnyVideoPlayerController != _anyVPController) {
       _dispose();
       _initialize();
@@ -147,46 +150,49 @@ class MaterialControlsState extends State<MaterialControls> {
     );
   }
 
-  Widget _buildBottomBar() {
-    final iconColor = Theme.of(context).textTheme.button!.color;
-    return AnimatedOpacity(
-      opacity: notifier.hideControls ? 0 : 1,
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        color: anyVPController.bottomBarConf.materialBackgroundColor,
-        height: barHeight,
-        padding: const EdgeInsets.only(
-          left: 20,
-        ),
-        child: SafeArea(
-          bottom: anyVPController.isFullScreen,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (anyVPController.isLive)
-                    const Expanded(child: Text('LIVE'))
-                  else
-                    _buildPosition(iconColor),
-                ],
-              )),
-              if (!anyVPController.isLive)
-                Expanded(
-                    child: Container(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Row(
-                    children: [_buildProgressBar()],
-                  ),
-                ))
-            ],
+  Widget _buildBottomBar(Color? iconColor, double barHeight) {
+    return SafeArea(
+        bottom: anyVPController.isFullScreen,
+        child: AnimatedOpacity(
+          opacity: notifier.hideControls ? 0 : 1,
+          duration: const Duration(milliseconds: 300),
+          child: Container(
+            color: controlsConf.materialBackgroundColor,
+            height: barHeight,
+            padding: const EdgeInsets.only(
+              left: 20,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (anyVPController.isLive)
+                          Expanded(
+                              child: Text(
+                            'LIVE',
+                            style: TextStyle(color: controlsConf.materialIconColor),
+                          ))
+                        else
+                          _buildPosition(iconColor),
+                      ],
+                    )),
+                if (!anyVPController.isLive)
+                  Expanded(
+                      child: Container(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Row(
+                      children: [_buildProgressBar()],
+                    ),
+                  ))
+              ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildPosition(Color? iconColor) {
@@ -200,14 +206,14 @@ class MaterialControlsState extends State<MaterialControls> {
           text: '/ ${formatDuration(duration)}',
           style: TextStyle(
             fontSize: 14.0,
-            color: Colors.white.withOpacity(.75),
+            color: controlsConf.materialIconColor,
             fontWeight: FontWeight.normal,
           ),
         )
       ],
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 14.0,
-        color: Colors.white,
+        color: controlsConf.materialIconColor,
         fontWeight: FontWeight.bold,
       ),
     ));
@@ -231,7 +237,7 @@ class MaterialControlsState extends State<MaterialControls> {
 
         _startHideControlsTimer();
       },
-      colors: anyVPController.bottomBarConf.materialProgressColors ??
+      colors: controlsConf.materialProgressColors ??
           AnyVideoProgressColors(
             playedColor: Theme.of(context).colorScheme.secondary,
             handleColor: Theme.of(context).colorScheme.secondary,

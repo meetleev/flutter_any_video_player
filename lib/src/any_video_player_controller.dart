@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:any_video_player/src/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -35,24 +38,24 @@ class AnyVideoPlayerController extends ChangeNotifier {
   /// Defines if the controls should be shown for live stream video
   final bool isLive;
 
-  /// The progressBarConfiguration to use for the Material Progress Bar.
-  final BottomBarConfiguration bottomBarConf;
+  /// The controlsConfiguration to use for the Material Progress Bar.
+  final ControlsConfiguration controlsConfiguration;
 
-  ///Color of the background, when no frame is displayed.
-  final Color backgroundColor;
+  /// Color of the background, when no frame is displayed.
+  final Color? backgroundColor;
 
   AnyVideoPlayerController(
       {Key? key,
       required this.dataSource,
-      this.backgroundColor = Colors.black,
+      this.backgroundColor,
       this.placeholder,
       this.showControls = true,
       this.showPlayButton = true,
       this.customControls,
       this.isLive = false,
       this.hideControlsTimer = defaultHideControlsTimer,
-      BottomBarConfiguration? barConfiguration})
-      : bottomBarConf = barConfiguration ?? BottomBarConfiguration() {
+        ControlsConfiguration? controlsConf})
+      : controlsConfiguration = controlsConf ?? ControlsConfiguration() {
     switch (dataSource.type) {
       case VideoPlayerDataSourceType.network:
         videoPlayerController = VideoPlayerController.network(dataSource.url,
@@ -67,7 +70,28 @@ class AnyVideoPlayerController extends ChangeNotifier {
             videoPlayerOptions: dataSource.videoPlayerOptions,
             closedCaptionFile: dataSource.closedCaptionFile);
         break;
+      case VideoPlayerDataSourceType.file:
+        try {
+          var file = File(dataSource.url);
+          if (file.existsSync()) {
+            videoPlayerController = VideoPlayerController.file(file,
+                videoPlayerOptions: dataSource.videoPlayerOptions,
+                closedCaptionFile: dataSource.closedCaptionFile);
+          } else {
+            FlutterError.presentError(
+                const FlutterErrorDetails(exception: 'file does not exists!', library: Constants.libraryName));
+          }
+        } catch (e, s) {
+          FlutterError.presentError(
+              FlutterErrorDetails(exception: e, stack: s, library: Constants.libraryName));
+        }
+        break;
     }
+  }
+
+  disposeAll(){
+    videoPlayerController.dispose();
+    dispose();
   }
 
   static AnyVideoPlayerController of(BuildContext context) {
