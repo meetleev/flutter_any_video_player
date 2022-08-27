@@ -1,3 +1,11 @@
+## 0.0.2
+
+* support load video from local filesystem
+* add option : **autoAlignVideoBottom**
+  </br>When the video width is larger than the screen width, the bottom progress bar is automatically aligned to the height of the video after scaling
+* fix some bugs
+
+
 ## 0.0.1
 
-* TODO: Describe initial release.
+* initial release.

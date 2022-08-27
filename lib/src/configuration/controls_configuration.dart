@@ -2,8 +2,10 @@ import 'package:any_video_player/src/video_progress_colors.dart';
 import 'package:flutter/material.dart';
 
 class ControlsConfiguration {
-  static const Color defaultCupertinoBackgroundColor = Color.fromRGBO(41, 41, 41, 0.7);
-  static const Color defaultCupertinoIconColor = Color.fromARGB(255, 200, 200, 200);
+  static const Color defaultCupertinoBackgroundColor =
+      Color.fromRGBO(41, 41, 41, 0.7);
+  static const Color defaultCupertinoIconColor =
+      Color.fromARGB(255, 200, 200, 200);
 
   /// The colors to use for the Material Progress Bar. By default, the Material
   /// player uses the colors from your Theme.

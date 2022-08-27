@@ -8,12 +8,14 @@ class BarAlignVideoBottomPage extends StatefulWidget {
   const BarAlignVideoBottomPage({Key? key}) : super(key: key);
 
   @override
-  State<BarAlignVideoBottomPage> createState() => _BarAlignVideoBottomPageState();
+  State<BarAlignVideoBottomPage> createState() =>
+      _BarAlignVideoBottomPageState();
 }
 
 class _BarAlignVideoBottomPageState extends State<BarAlignVideoBottomPage> {
   AnyVideoPlayerController? _anyVideoPlayerController;
-  final GroupButtonController _groupButtonController = GroupButtonController(selectedIndex: 0);
+  final GroupButtonController _groupButtonController =
+      GroupButtonController(selectedIndex: 0);
 
   @override
   void initState() {

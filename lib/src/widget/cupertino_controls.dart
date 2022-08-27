@@ -30,7 +30,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
 
   VideoPlayerController get controller => anyVPController.videoPlayerController;
 
-  ControlsConfiguration get controlsConf => anyVPController.controlsConfiguration;
+  ControlsConfiguration get controlsConf =>
+      anyVPController.controlsConfiguration;
 
   bool _wasLoading = false;
   late VideoPlayerNotifier notifier;
@@ -51,7 +52,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
     final barHeight = orientation == Orientation.portrait ? 30.0 : 47.0;
     final videoSize = anyVPController.videoPlayerController.value.size;
     final offset = controlsConf.autoAlignVideoBottom
-        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
+        ? calculateVideo2ScreenHeightOffset(context, videoSize,
+            mediaData: mediaData)
         : 0;
     var bottom = controlsConf.paddingBottom + offset / 2;
     return GestureDetector(
@@ -111,7 +113,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
     if (mounted) {
       _wasLoading = controller.value.isBuffering;
       if (controller.value.isInitialized) {
-        final bool isFinished = controller.value.position >= controller.value.duration;
+        final bool isFinished =
+            controller.value.position >= controller.value.duration;
         if (isFinished) notifier.hideControls = false;
       }
       setState(() {});
@@ -125,8 +128,11 @@ class CupertinoControlsState extends State<CupertinoControls> {
   }
 
   Widget _buildHitArea() {
-    final bool isFinished = controller.value.position >= controller.value.duration;
-    final bool showPlayButton = anyVPController.showPlayButton && !controller.value.isPlaying && !_dragging;
+    final bool isFinished =
+        controller.value.position >= controller.value.duration;
+    final bool showPlayButton = anyVPController.showPlayButton &&
+        !controller.value.isPlaying &&
+        !_dragging;
 
     return GestureDetector(
       onTap: () {
@@ -175,9 +181,11 @@ class CupertinoControlsState extends State<CupertinoControls> {
                     height: barHeight,
                     color: controlsConf.cupertinoBackgroundColor,
                     child: anyVPController.isLive
-                        ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            _buildLive(iconColor),
-                          ])
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                _buildLive(iconColor),
+                              ])
                         : Row(
                             children: [
                               _buildSkipBack(iconColor, barHeight),
@@ -309,7 +317,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
       onTap: () {
         _restartControlsTimer();
         final beginning = Duration.zero.inMilliseconds;
-        final skip = (controller.value.position - const Duration(seconds: 15)).inMilliseconds;
+        final skip = (controller.value.position - const Duration(seconds: 15))
+            .inMilliseconds;
         controller.seekTo(Duration(milliseconds: max(skip, beginning)));
       },
       child: Container(
@@ -334,7 +343,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
       onTap: () {
         _restartControlsTimer();
         final end = controller.value.duration.inMilliseconds;
-        final skip = (controller.value.position + const Duration(seconds: 15)).inMilliseconds;
+        final skip = (controller.value.position + const Duration(seconds: 15))
+            .inMilliseconds;
         controller.seekTo(Duration(milliseconds: min(skip, end)));
       },
       child: Container(
@@ -367,7 +377,8 @@ class CupertinoControlsState extends State<CupertinoControls> {
         if (!controller.value.isInitialized) {
           controller.initialize().then((value) => controller.play());
         } else {
-          final isFinished = controller.value.position >= controller.value.duration;
+          final isFinished =
+              controller.value.position >= controller.value.duration;
           if (isFinished) {
             controller.seekTo(Duration.zero);
           }

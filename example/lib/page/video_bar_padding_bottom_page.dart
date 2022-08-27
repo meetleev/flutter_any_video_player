@@ -8,12 +8,14 @@ class VideoBarPaddingBottomPage extends StatefulWidget {
   const VideoBarPaddingBottomPage({Key? key}) : super(key: key);
 
   @override
-  State<VideoBarPaddingBottomPage> createState() => _VideoBarPaddingBottomPageState();
+  State<VideoBarPaddingBottomPage> createState() =>
+      _VideoBarPaddingBottomPageState();
 }
 
 class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
   AnyVideoPlayerController? _anyVideoPlayerController;
-  final GroupButtonController _groupButtonController = GroupButtonController(selectedIndex: 0);
+  final GroupButtonController _groupButtonController =
+      GroupButtonController(selectedIndex: 0);
 
   @override
   void initState() {
@@ -25,7 +27,8 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
     _anyVideoPlayerController?.disposeAll();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
-        controlsConf: ControlsConfiguration(paddingBottom: paddingBottom, autoAlignVideoBottom: false));
+        controlsConf: ControlsConfiguration(
+            paddingBottom: paddingBottom, autoAlignVideoBottom: false));
     setState(() {});
   }
 
@@ -38,25 +41,25 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
       extendBodyBehindAppBar: true,
       body: null != _anyVideoPlayerController
           ? Stack(
-        children: [
-          AnyVideoPlayer(controller: _anyVideoPlayerController!),
-          Container(
-            padding: const EdgeInsets.only(top: 100),
-            child: Row(
               children: [
-                GroupButton(
-                  controller: _groupButtonController,
-                  buttons: const [20, 40, 60, 80,100],
-                  onSelected: (int title, idx, selected) {
-                    _groupButtonController.selectIndex(idx);
-                    _loadVideo(title.toDouble());
-                  },
-                ),
+                AnyVideoPlayer(controller: _anyVideoPlayerController!),
+                Container(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Row(
+                    children: [
+                      GroupButton(
+                        controller: _groupButtonController,
+                        buttons: const [20, 40, 60, 80, 100],
+                        onSelected: (int title, idx, selected) {
+                          _groupButtonController.selectIndex(idx);
+                          _loadVideo(title.toDouble());
+                        },
+                      ),
+                    ],
+                  ),
+                )
               ],
-            ),
-          )
-        ],
-      )
+            )
           : Container(),
     );
   }

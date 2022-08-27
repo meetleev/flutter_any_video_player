@@ -13,7 +13,8 @@ class DataSourcePage extends StatefulWidget {
 
 class _DataSourcePageState extends State<DataSourcePage> {
   AnyVideoPlayerController? _anyVideoPlayerController;
-  final GroupButtonController _groupButtonController = GroupButtonController(selectedIndex: 0);
+  final GroupButtonController _groupButtonController =
+      GroupButtonController(selectedIndex: 0);
 
   @override
   void initState() {
@@ -25,8 +26,8 @@ class _DataSourcePageState extends State<DataSourcePage> {
     _anyVideoPlayerController?.disposeAll();
     switch (type) {
       case VideoPlayerDataSourceType.asset:
-        _anyVideoPlayerController =
-            AnyVideoPlayerController(dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
+        _anyVideoPlayerController = AnyVideoPlayerController(
+            dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
         setState(() {});
         break;
       case VideoPlayerDataSourceType.network:
@@ -38,7 +39,8 @@ class _DataSourcePageState extends State<DataSourcePage> {
       case VideoPlayerDataSourceType.file:
         getTemporaryDirectory().then((directory) {
           final String url = '${directory.path}/$fileVideoName';
-          _anyVideoPlayerController = AnyVideoPlayerController(dataSource: VideoPlayerDataSource.file(url));
+          _anyVideoPlayerController = AnyVideoPlayerController(
+              dataSource: VideoPlayerDataSource.file(url));
           setState(() {});
         });
         break;

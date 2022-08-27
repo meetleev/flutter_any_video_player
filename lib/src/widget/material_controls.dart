@@ -25,7 +25,8 @@ class MaterialControlsState extends State<MaterialControls> {
 
   VideoPlayerController get controller => anyVPController.videoPlayerController;
 
-  ControlsConfiguration get controlsConf => anyVPController.controlsConfiguration;
+  ControlsConfiguration get controlsConf =>
+      anyVPController.controlsConfiguration;
   bool _wasLoading = false;
   late VideoPlayerNotifier notifier;
   Timer? _hideControlsTimer;
@@ -43,9 +44,11 @@ class MaterialControlsState extends State<MaterialControls> {
     final mediaData = MediaQuery.of(context);
     final videoSize = controller.value.size;
     final offset = controlsConf.autoAlignVideoBottom
-        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
+        ? calculateVideo2ScreenHeightOffset(context, videoSize,
+            mediaData: mediaData)
         : 0;
-    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize, mediaData: mediaData);
+    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize,
+        mediaData: mediaData);
     final barHeight = 48.0 * 1.5 * (0 < widthScale ? widthScale : 1);
     var bottom = controlsConf.paddingBottom + offset / 2;
     final iconColor = Theme.of(context).textTheme.button!.color;
@@ -106,7 +109,8 @@ class MaterialControlsState extends State<MaterialControls> {
     if (mounted) {
       _wasLoading = controller.value.isBuffering;
       if (controller.value.isInitialized) {
-        final bool isFinished = controller.value.position >= controller.value.duration;
+        final bool isFinished =
+            controller.value.position >= controller.value.duration;
         if (isFinished) notifier.hideControls = false;
       }
       setState(() {});
@@ -120,8 +124,10 @@ class MaterialControlsState extends State<MaterialControls> {
   }
 
   Widget _buildHitArea() {
-    final bool isFinished = controller.value.position >= controller.value.duration;
-    final bool showPlayButton = anyVPController.showPlayButton && !notifier.hideControls && !_dragging;
+    final bool isFinished =
+        controller.value.position >= controller.value.duration;
+    final bool showPlayButton =
+        anyVPController.showPlayButton && !notifier.hideControls && !_dragging;
     return GestureDetector(
       onTap: () {
         if (controller.value.isPlaying) {
@@ -175,7 +181,8 @@ class MaterialControlsState extends State<MaterialControls> {
                           Expanded(
                               child: Text(
                             'LIVE',
-                            style: TextStyle(color: controlsConf.materialIconColor),
+                            style: TextStyle(
+                                color: controlsConf.materialIconColor),
                           ))
                         else
                           _buildPosition(iconColor),
@@ -258,7 +265,8 @@ class MaterialControlsState extends State<MaterialControls> {
         if (!controller.value.isInitialized) {
           controller.initialize().then((value) => controller.play());
         } else {
-          final isFinished = controller.value.position >= controller.value.duration;
+          final isFinished =
+              controller.value.position >= controller.value.duration;
           if (isFinished) {
             controller.seekTo(Duration.zero);
           }

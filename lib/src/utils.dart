@@ -39,7 +39,8 @@ String formatDuration(Duration position) {
           ? '00'
           : '0$seconds';
 
-  final formattedTime = '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
+  final formattedTime =
+      '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
 
   return formattedTime;
 }
@@ -52,20 +53,29 @@ double calculateAspectRatio(BuildContext context) {
   return width > height ? width / height : height / width;
 }
 
-double calculateVideo2ScreenWidthRatio(BuildContext context, Size videoSize, {MediaQueryData? mediaData}) {
+double calculateVideo2ScreenWidthRatio(BuildContext context, Size videoSize,
+    {MediaQueryData? mediaData}) {
   if (videoSize.isEmpty) return 0;
   mediaData ??= MediaQuery.of(context);
   final orientation = mediaData.orientation;
-  final width = orientation == Orientation.portrait ? mediaData.size.width : mediaData.size.height;
+  final width = orientation == Orientation.portrait
+      ? mediaData.size.width
+      : mediaData.size.height;
   return width * mediaData.devicePixelRatio / videoSize.width;
 }
 
-double calculateVideo2ScreenHeightOffset(BuildContext context, Size videoSize, {MediaQueryData? mediaData}) {
+double calculateVideo2ScreenHeightOffset(BuildContext context, Size videoSize,
+    {MediaQueryData? mediaData}) {
   if (videoSize.isEmpty) return 0;
   mediaData ??= MediaQuery.of(context);
   final orientation = mediaData.orientation;
-  final width = orientation == Orientation.portrait ? mediaData.size.width : mediaData.size.height;
-  final height = orientation == Orientation.portrait ? mediaData.size.height : mediaData.size.width;
-  final videoHeight = videoSize.height * width * mediaData.devicePixelRatio / videoSize.width;
+  final width = orientation == Orientation.portrait
+      ? mediaData.size.width
+      : mediaData.size.height;
+  final height = orientation == Orientation.portrait
+      ? mediaData.size.height
+      : mediaData.size.width;
+  final videoHeight =
+      videoSize.height * width * mediaData.devicePixelRatio / videoSize.width;
   return height - videoHeight / 2;
 }
