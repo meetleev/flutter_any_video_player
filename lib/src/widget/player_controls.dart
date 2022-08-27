@@ -85,8 +85,8 @@ class PlayerControlsState extends State<PlayerControls> {
       // case TargetPlatform.windows:
       // case TargetPlatform.linux:
       //   return const MaterialDesktopControls();
-      // case TargetPlatform.iOS:
-      // return const CupertinoControls();
+      case TargetPlatform.iOS:
+        return const CupertinoControls();
       default:
         return const MaterialControls();
     }
