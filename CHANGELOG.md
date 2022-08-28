@@ -1,4 +1,4 @@
-## 0.0.3
+## 0.0.4
 
 * support video player event [initialized, play, pause, seekTo, finished, controlsVisibleChange]
 

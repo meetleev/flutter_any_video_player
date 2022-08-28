@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:any_video_player/src/event/any_video_player_event.dart';
-import 'package:any_video_player/src/event/any_video_player_event_type.dart';
 import 'package:any_video_player/src/widget/progress_bar_adapter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
