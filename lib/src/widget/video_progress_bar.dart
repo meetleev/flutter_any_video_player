@@ -4,6 +4,8 @@ import 'package:any_video_player/src/video_progress_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../any_video_player.dart';
+
 class AnyVideoProgressBar extends StatefulWidget {
   AnyVideoProgressBar(
     this.controller, {
@@ -18,7 +20,7 @@ class AnyVideoProgressBar extends StatefulWidget {
   })  : colors = colors ?? AnyVideoProgressColors(),
         super(key: key);
 
-  final VideoPlayerController controller;
+  final AnyVideoPlayerController controller;
   final AnyVideoProgressColors colors;
   final Function()? onDragStart;
   final Function()? onDragEnd;
@@ -43,7 +45,8 @@ class _VideoProgressBarState extends State<AnyVideoProgressBar> {
 
   bool _controllerWasPlaying = false;
 
-  VideoPlayerController get controller => widget.controller;
+  AnyVideoPlayerController get anyVPController => widget.controller;
+  VideoPlayerController get controller => anyVPController.videoPlayerController;
 
   @override
   void initState() {
@@ -62,7 +65,7 @@ class _VideoProgressBarState extends State<AnyVideoProgressBar> {
     final Offset tapPos = box.globalToLocal(globalPosition);
     final double relative = tapPos.dx / box.size.width;
     final Duration position = controller.value.duration * relative;
-    controller.seekTo(position);
+    anyVPController.seekTo(position);
   }
 
   @override
@@ -74,7 +77,7 @@ class _VideoProgressBarState extends State<AnyVideoProgressBar> {
         }
         _controllerWasPlaying = controller.value.isPlaying;
         if (_controllerWasPlaying) {
-          controller.pause();
+          anyVPController.pause();
         }
 
         widget.onDragStart?.call();
@@ -97,7 +100,7 @@ class _VideoProgressBarState extends State<AnyVideoProgressBar> {
       },
       onHorizontalDragEnd: (DragEndDetails details) {
         if (_controllerWasPlaying) {
-          controller.play();
+          anyVPController.play();
         }
 
         widget.onDragEnd?.call();

@@ -1,7 +1,6 @@
+import 'package:any_video_player/src/event/any_video_player_event_type.dart';
 import 'package:any_video_player/src/widget/player_controls.dart';
-import 'package:any_video_player/src/video_player_notifier.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 import 'any_video_player_controller.dart';
 
 class AnyVideoPlayer extends StatefulWidget {
@@ -16,35 +15,28 @@ class AnyVideoPlayer extends StatefulWidget {
 class AnyVideoPlayerState extends State<AnyVideoPlayer> {
   @override
   void initState() {
-    _initializeVideo();
+    widget.controller.addEventListener(_onPlayerEvent);
     super.initState();
-  }
-
-  _initializeVideo() {
-    if (!widget.controller.videoPlayerController.value.isInitialized) {
-      widget.controller.videoPlayerController
-          .initialize()
-          .then((value) => setState(() {}));
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AnyVideoPlayerControllerProvider(
         controller: widget.controller,
-        child: ChangeNotifierProvider(
-          create: (_) => VideoPlayerNotifier(),
-          child: PlayerControls(
-            controller: widget.controller,
-          ),
+        child: PlayerControls(
+          controller: widget.controller,
         ));
   }
 
   @override
-  void didUpdateWidget(AnyVideoPlayer oldWidget) {
-    if (oldWidget.controller != widget.controller) {
-      _initializeVideo();
+  void dispose() {
+    widget.controller.removeEventListener(_onPlayerEvent);
+    super.dispose();
+  }
+
+  void _onPlayerEvent(eventType, params) {
+    if (AnyVideoPlayerEventType.initialized == eventType) {
+      setState(() {});
     }
-    super.didUpdateWidget(oldWidget);
   }
 }

@@ -29,7 +29,7 @@ class ControlsConfiguration {
   /// The autoAlignVideoBottom to use for automatically align video bottom. default true
   final bool autoAlignVideoBottom;
 
-  ControlsConfiguration(
+   ControlsConfiguration(
       {this.materialProgressColors,
       this.cupertinoProgressColors,
       this.paddingBottom = 0,

@@ -1,6 +1,6 @@
+import 'package:any_video_player/any_video_player.dart';
 import 'package:any_video_player/src/widget/video_progress_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 import '../video_progress_colors.dart';
 
@@ -15,7 +15,7 @@ class VideoProgressBarAdapter extends StatelessWidget {
   })  : colors = colors ?? AnyVideoProgressColors(),
         super(key: key);
 
-  final VideoPlayerController controller;
+  final AnyVideoPlayerController controller;
   final AnyVideoProgressColors colors;
   final Function()? onDragStart;
   final Function()? onDragEnd;

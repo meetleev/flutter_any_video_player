@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:any_video_player/any_video_player.dart';
-import 'package:any_video_player/src/widget/center_play_button.dart';
-import 'package:any_video_player/src/video_player_notifier.dart';
 import 'package:any_video_player/src/video_progress_colors.dart';
-import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-
 import '../utils.dart';
-import 'progress_bar_adapter.dart';
+import 'controls_state.dart';
 
 class MaterialControls extends StatefulWidget {
   const MaterialControls({super.key});
@@ -18,51 +10,28 @@ class MaterialControls extends StatefulWidget {
   State<MaterialControls> createState() => MaterialControlsState();
 }
 
-class MaterialControlsState extends State<MaterialControls> {
-  AnyVideoPlayerController? _anyVPController;
-
-  AnyVideoPlayerController get anyVPController => _anyVPController!;
-
-  VideoPlayerController get controller => anyVPController.videoPlayerController;
-
-  ControlsConfiguration get controlsConf =>
-      anyVPController.controlsConfiguration;
-  bool _wasLoading = false;
-  late VideoPlayerNotifier notifier;
-  Timer? _hideControlsTimer;
-  bool _displayTapped = false;
-  bool _dragging = false;
-
-  @override
-  void initState() {
-    notifier = Provider.of<VideoPlayerNotifier>(context, listen: false);
-    super.initState();
-  }
-
+class MaterialControlsState extends ControlsState<MaterialControls> {
   @override
   Widget build(BuildContext context) {
     final mediaData = MediaQuery.of(context);
     final videoSize = controller.value.size;
     final offset = controlsConf.autoAlignVideoBottom
-        ? calculateVideo2ScreenHeightOffset(context, videoSize,
-            mediaData: mediaData)
+        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
         : 0;
-    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize,
-        mediaData: mediaData);
+    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize, mediaData: mediaData);
     final barHeight = 48.0 * 1.5 * (0 < widthScale ? widthScale : 1);
     var bottom = controlsConf.paddingBottom + offset / 2;
     final iconColor = Theme.of(context).textTheme.button!.color;
-    return GestureDetector(
-      onTap: () => _restartControlsTimer(),
+    return buildMain(
       child: AbsorbPointer(
-        absorbing: notifier.hideControls,
+        absorbing: !controlsVisible,
         child: Stack(
           children: [
-            _wasLoading
+            wasLoading
                 ? Center(
                     child: _buildLoading(),
                   )
-                : _buildHitArea(),
+                : buildHitArea(),
             Container(
               padding: EdgeInsets.only(bottom: bottom),
               child: Column(
@@ -78,81 +47,9 @@ class MaterialControlsState extends State<MaterialControls> {
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    final oldAnyVideoPlayerController = _anyVPController;
-    _anyVPController = AnyVideoPlayerController.of(context);
-    if (oldAnyVideoPlayerController != _anyVPController) {
-      _dispose();
-      _initialize();
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    _dispose();
-    super.dispose();
-  }
-
-  Future<void> _initialize() async {
-    controller.addListener(_updateState);
-    _updateState();
-  }
-
-  void _dispose() {
-    controller.removeListener(_updateState);
-    _hideControlsTimer?.cancel();
-  }
-
-  void _updateState() {
-    if (mounted) {
-      _wasLoading = controller.value.isBuffering;
-      if (controller.value.isInitialized) {
-        final bool isFinished =
-            controller.value.position >= controller.value.duration;
-        if (isFinished) notifier.hideControls = false;
-      }
-      setState(() {});
-    }
-  }
-
   Widget _buildLoading() {
     return const Center(
       child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget _buildHitArea() {
-    final bool isFinished =
-        controller.value.position >= controller.value.duration;
-    final bool showPlayButton =
-        anyVPController.showPlayButton && !notifier.hideControls && !_dragging;
-    return GestureDetector(
-      onTap: () {
-        if (controller.value.isPlaying) {
-          if (_displayTapped) {
-            setState(() {
-              notifier.hideControls = true;
-            });
-          } else {
-            _restartControlsTimer();
-          }
-        } else {
-          _playPause();
-          setState(() {
-            notifier.hideControls = true;
-          });
-        }
-      },
-      child: CenterPlayButton(
-        isPlaying: controller.value.isPlaying,
-        iconColor: Colors.white,
-        isFinished: isFinished,
-        backgroundColor: Colors.black54,
-        show: showPlayButton,
-        onPressed: _playPause,
-      ),
     );
   }
 
@@ -160,7 +57,7 @@ class MaterialControlsState extends State<MaterialControls> {
     return SafeArea(
         bottom: anyVPController.isFullScreen,
         child: AnimatedOpacity(
-          opacity: notifier.hideControls ? 0 : 1,
+          opacity: !controlsVisible ? 0 : 1,
           duration: const Duration(milliseconds: 300),
           child: Container(
             color: controlsConf.materialBackgroundColor,
@@ -181,8 +78,7 @@ class MaterialControlsState extends State<MaterialControls> {
                           Expanded(
                               child: Text(
                             'LIVE',
-                            style: TextStyle(
-                                color: controlsConf.materialIconColor),
+                            style: TextStyle(color: controlsConf.materialIconColor),
                           ))
                         else
                           _buildPosition(iconColor),
@@ -228,23 +124,8 @@ class MaterialControlsState extends State<MaterialControls> {
 
   Widget _buildProgressBar() {
     return Expanded(
-        child: VideoProgressBarAdapter(
-      controller,
-      onDragStart: () {
-        setState(() {
-          _dragging = true;
-        });
-
-        _hideControlsTimer?.cancel();
-      },
-      onDragEnd: () {
-        setState(() {
-          _dragging = false;
-        });
-
-        _startHideControlsTimer();
-      },
-      colors: controlsConf.materialProgressColors ??
+        child: buildVideoProgressBarAdapter(
+      color: controlsConf.materialProgressColors ??
           AnyVideoProgressColors(
             playedColor: Theme.of(context).colorScheme.secondary,
             handleColor: Theme.of(context).colorScheme.secondary,
@@ -252,47 +133,5 @@ class MaterialControlsState extends State<MaterialControls> {
             backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
           ),
     ));
-  }
-
-  void _playPause() {
-    setState(() {
-      if (controller.value.isPlaying) {
-        notifier.hideControls = false;
-        _hideControlsTimer?.cancel();
-        controller.pause();
-      } else {
-        _restartControlsTimer();
-        if (!controller.value.isInitialized) {
-          controller.initialize().then((value) => controller.play());
-        } else {
-          final isFinished =
-              controller.value.position >= controller.value.duration;
-          if (isFinished) {
-            controller.seekTo(Duration.zero);
-          }
-          controller.play();
-        }
-      }
-    });
-  }
-
-  void _restartControlsTimer() {
-    _hideControlsTimer?.cancel();
-    _startHideControlsTimer();
-    setState(() {
-      notifier.hideControls = false;
-      _displayTapped = true;
-    });
-  }
-
-  void _startHideControlsTimer() {
-    final hideControlsTimer = anyVPController.hideControlsTimer.isNegative
-        ? AnyVideoPlayerController.defaultHideControlsTimer
-        : anyVPController.hideControlsTimer;
-    _hideControlsTimer = Timer(hideControlsTimer, () {
-      setState(() {
-        notifier.hideControls = true;
-      });
-    });
   }
 }

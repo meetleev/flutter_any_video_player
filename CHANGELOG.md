@@ -1,3 +1,7 @@
+## 0.0.3
+
+* support video player event [initialized, play, pause, seekTo, finished, controlsVisibleChange]
+
 ## 0.0.2
 
 * support load video from local filesystem

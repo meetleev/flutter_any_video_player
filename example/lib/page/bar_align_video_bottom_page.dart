@@ -24,7 +24,7 @@ class _BarAlignVideoBottomPageState extends State<BarAlignVideoBottomPage> {
   }
 
   _loadVideo(bool align) {
-    _anyVideoPlayerController?.disposeAll();
+    _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
         controlsConf: ControlsConfiguration(autoAlignVideoBottom: align));
@@ -65,7 +65,7 @@ class _BarAlignVideoBottomPageState extends State<BarAlignVideoBottomPage> {
 
   @override
   void dispose() {
-    _anyVideoPlayerController?.disposeAll();
+    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:example/constants.dart';
 import 'package:example/page/data_source_page.dart';
+import 'package:example/page/video_event_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -47,6 +48,9 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
       }),
       _buildExampleElementWidget('video bottom bar padding bottom', () {
         _navigateToPage(const VideoBarPaddingBottomPage());
+      }),
+      _buildExampleElementWidget('video event', () {
+        _navigateToPage(const VideoEventPage());
       }),
     ];
   }

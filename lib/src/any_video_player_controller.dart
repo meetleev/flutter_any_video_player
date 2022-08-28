@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:any_video_player/src/constants.dart';
+import 'package:any_video_player/src/event/any_video_player_event_type.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../any_video_player.dart';
+import 'event/any_video_player_event.dart';
 
-class AnyVideoPlayerController extends ChangeNotifier {
+class AnyVideoPlayerController {
   static const defaultHideControlsTimer = Duration(seconds: 3);
 
   late VideoPlayerController videoPlayerController;
@@ -44,6 +46,8 @@ class AnyVideoPlayerController extends ChangeNotifier {
   /// Color of the background, when no frame is displayed.
   final Color? backgroundColor;
 
+  final EventManager _eventManager = EventManager.instance;
+
   AnyVideoPlayerController(
       {Key? key,
       required this.dataSource,
@@ -79,25 +83,50 @@ class AnyVideoPlayerController extends ChangeNotifier {
                 closedCaptionFile: dataSource.closedCaptionFile);
           } else {
             FlutterError.presentError(const FlutterErrorDetails(
-                exception: 'file does not exists!',
-                library: Constants.libraryName));
+                exception: 'file does not exists!', library: Constants.libraryName));
           }
         } catch (e, s) {
-          FlutterError.presentError(FlutterErrorDetails(
-              exception: e, stack: s, library: Constants.libraryName));
+          FlutterError.presentError(
+              FlutterErrorDetails(exception: e, stack: s, library: Constants.libraryName));
         }
         break;
     }
+    initializeVideo();
   }
 
-  disposeAll() {
+  dispose() {
     videoPlayerController.dispose();
-    dispose();
+  }
+
+  /// Listen on the given [listener].
+  void addEventListener(AnyVideoPlayerEventListener listener) => _eventManager.addEventListener(listener);
+
+  /// Remove the given [listener].
+  void removeEventListener(AnyVideoPlayerEventListener listener) =>
+      _eventManager.removeEventListener(listener);
+
+  Future<void> play() async {
+    await videoPlayerController.play();
+    _eventManager.postEvent(AnyVideoPlayerEventType.play);
+  }
+
+  Future<void> pause() async {
+    await videoPlayerController.pause();
+    _eventManager.postEvent(AnyVideoPlayerEventType.pause);
+  }
+
+  Future<void> seekTo(Duration position) async {
+    await videoPlayerController.seekTo(position);
+    _eventManager.postEvent(AnyVideoPlayerEventType.seekTo, params: position);
+  }
+
+  Future<void> initializeVideo() async {
+    await videoPlayerController.initialize();
+    _eventManager.postEvent(AnyVideoPlayerEventType.initialized);
   }
 
   static AnyVideoPlayerController of(BuildContext context) {
-    final provider = context.dependOnInheritedWidgetOfExactType<
-        AnyVideoPlayerControllerProvider>()!;
+    final provider = context.dependOnInheritedWidgetOfExactType<AnyVideoPlayerControllerProvider>()!;
     return provider.controller;
   }
 }
@@ -105,11 +134,9 @@ class AnyVideoPlayerController extends ChangeNotifier {
 class AnyVideoPlayerControllerProvider extends InheritedWidget {
   final AnyVideoPlayerController controller;
 
-  const AnyVideoPlayerControllerProvider(
-      {Key? key, required Widget child, required this.controller})
+  const AnyVideoPlayerControllerProvider({Key? key, required Widget child, required this.controller})
       : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(AnyVideoPlayerControllerProvider oldWidget) =>
-      oldWidget.controller != controller;
+  bool updateShouldNotify(AnyVideoPlayerControllerProvider oldWidget) => oldWidget.controller != controller;
 }

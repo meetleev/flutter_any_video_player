@@ -11,14 +11,13 @@ class PlayerControls extends StatefulWidget {
   const PlayerControls({Key? key, required this.controller}) : super(key: key);
 
   @override
-  State<PlayerControls> createState() => PlayerControlsState();
+  State<PlayerControls> createState() => _PlayerControlsState();
 }
 
-class PlayerControlsState extends State<PlayerControls> {
+class _PlayerControlsState extends State<PlayerControls> {
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        Theme.of(context).textTheme.bodyLarge!.backgroundColor;
+    final backgroundColor = Theme.of(context).textTheme.bodyLarge!.backgroundColor;
     final AnyVideoPlayerController controller = widget.controller;
     double? aspectRatio;
     if (controller.isFullScreen) {}
@@ -36,13 +35,11 @@ class PlayerControlsState extends State<PlayerControls> {
     );
   }
 
-  Widget _buildPlayerControls(
-      BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
+  Widget _buildPlayerControls(BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
     var controller = anyVideoPlayerController.videoPlayerController;
     return Stack(
       children: [
-        if (null != anyVideoPlayerController.placeholder)
-          anyVideoPlayerController.placeholder!,
+        if (null != anyVideoPlayerController.placeholder) anyVideoPlayerController.placeholder!,
         if (controller.value.isInitialized)
           InteractiveViewer(
             child: Center(
@@ -72,11 +69,9 @@ class PlayerControlsState extends State<PlayerControls> {
     );
   }
 
-  _buildControls(
-      BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
+  _buildControls(BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
     if (anyVideoPlayerController.showControls) {
-      return anyVideoPlayerController.customControls ??
-          _controlsAdapter(context);
+      return anyVideoPlayerController.customControls ?? _controlsAdapter(context);
     }
     return const SizedBox();
   }

@@ -24,7 +24,7 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
   }
 
   _loadVideo(double paddingBottom) {
-    _anyVideoPlayerController?.disposeAll();
+    _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
         controlsConf: ControlsConfiguration(
@@ -66,7 +66,7 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
 
   @override
   void dispose() {
-    _anyVideoPlayerController?.disposeAll();
+    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }
