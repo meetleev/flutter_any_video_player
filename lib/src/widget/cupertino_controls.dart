@@ -24,7 +24,8 @@ class CupertinoControlsState extends ControlsState<CupertinoControls> {
     final barHeight = orientation == Orientation.portrait ? 30.0 : 47.0;
     final videoSize = anyVPController.videoPlayerController.value.size;
     final offset = controlsConf.autoAlignVideoBottom
-        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
+        ? calculateVideo2ScreenHeightOffset(context, videoSize,
+            mediaData: mediaData)
         : 0;
     var bottom = controlsConf.paddingBottom + offset / 2;
     return buildMain(
@@ -77,9 +78,11 @@ class CupertinoControlsState extends ControlsState<CupertinoControls> {
                     height: barHeight,
                     color: controlsConf.cupertinoBackgroundColor,
                     child: anyVPController.isLive
-                        ? Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            _buildLive(iconColor),
-                          ])
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                                _buildLive(iconColor),
+                              ])
                         : Row(
                             children: [
                               _buildSkipBack(iconColor, barHeight),
@@ -191,7 +194,7 @@ class CupertinoControlsState extends ControlsState<CupertinoControls> {
 
   GestureDetector _buildSkipBack(Color iconColor, double barHeight) {
     return GestureDetector(
-      onTap:  skipBack,
+      onTap: skipBack,
       child: Container(
         height: barHeight,
         color: Colors.transparent,
@@ -211,7 +214,7 @@ class CupertinoControlsState extends ControlsState<CupertinoControls> {
 
   GestureDetector _buildSkipForward(Color iconColor, double barHeight) {
     return GestureDetector(
-      onTap:  skipForward,
+      onTap: skipForward,
       child: Container(
         height: barHeight,
         color: Colors.transparent,

@@ -16,9 +16,11 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
     final mediaData = MediaQuery.of(context);
     final videoSize = controller.value.size;
     final offset = controlsConf.autoAlignVideoBottom
-        ? calculateVideo2ScreenHeightOffset(context, videoSize, mediaData: mediaData)
+        ? calculateVideo2ScreenHeightOffset(context, videoSize,
+            mediaData: mediaData)
         : 0;
-    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize, mediaData: mediaData);
+    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize,
+        mediaData: mediaData);
     final barHeight = 48.0 * 1.5 * (0 < widthScale ? widthScale : 1);
     var bottom = controlsConf.paddingBottom + offset / 2;
     final iconColor = Theme.of(context).textTheme.button!.color;
@@ -78,7 +80,8 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
                           Expanded(
                               child: Text(
                             'LIVE',
-                            style: TextStyle(color: controlsConf.materialIconColor),
+                            style: TextStyle(
+                                color: controlsConf.materialIconColor),
                           ))
                         else
                           _buildPosition(iconColor),

@@ -18,7 +18,8 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
 
   VideoPlayerController get controller => anyVPController.videoPlayerController;
 
-  ControlsConfiguration get controlsConf => anyVPController.controlsConfiguration;
+  ControlsConfiguration get controlsConf =>
+      anyVPController.controlsConfiguration;
 
   bool wasLoading = false;
   Timer? _hideControlsTimer;
@@ -62,7 +63,8 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
     if (mounted) {
       wasLoading = controller.value.isBuffering;
       if (controller.value.isInitialized) {
-        final bool isFinished = controller.value.position >= controller.value.duration;
+        final bool isFinished =
+            controller.value.position >= controller.value.duration;
         if (isFinished) {
           EventManager.instance.postEvent(AnyVideoPlayerEventType.finished);
           changePlayerControlsVisible(true);
@@ -81,9 +83,12 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
       } else {
         _restartControlsTimer();
         if (!controller.value.isInitialized) {
-          anyVPController.initializeVideo().then((value) => anyVPController.play());
+          anyVPController
+              .initializeVideo()
+              .then((value) => anyVPController.play());
         } else {
-          final isFinished = controller.value.position >= controller.value.duration;
+          final isFinished =
+              controller.value.position >= controller.value.duration;
           if (isFinished) {
             anyVPController.seekTo(Duration.zero);
           }
@@ -111,14 +116,17 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
 
   Widget buildMain({required Widget child}) {
     return GestureDetector(
-      onTap:  _restartControlsTimer,
+      onTap: _restartControlsTimer,
       child: child,
     );
   }
 
   Widget buildHitArea() {
-    final bool isFinished = controller.value.position >= controller.value.duration;
-    final bool showPlayButton = anyVPController.showPlayButton && !controller.value.isPlaying && !_dragging;
+    final bool isFinished =
+        controller.value.position >= controller.value.duration;
+    final bool showPlayButton = anyVPController.showPlayButton &&
+        !controller.value.isPlaying &&
+        !_dragging;
 
     return GestureDetector(
       onTap: () {
@@ -166,21 +174,25 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   void skipForward() {
     _restartControlsTimer();
     final end = controller.value.duration.inMilliseconds;
-    final skip = (controller.value.position + const Duration(seconds: 15)).inMilliseconds;
+    final skip = (controller.value.position + const Duration(seconds: 15))
+        .inMilliseconds;
     anyVPController.seekTo(Duration(milliseconds: min(skip, end)));
   }
 
   void skipBack() {
     _restartControlsTimer();
     final beginning = Duration.zero.inMilliseconds;
-    final skip = (controller.value.position - const Duration(seconds: 15)).inMilliseconds;
+    final skip = (controller.value.position - const Duration(seconds: 15))
+        .inMilliseconds;
     anyVPController.seekTo(Duration(milliseconds: max(skip, beginning)));
   }
 
   /// Called when player controls visibility should be changed.
   void changePlayerControlsVisible(bool visible) {
     setState(() {
-      EventManager.instance.postEvent(AnyVideoPlayerEventType.controlsVisibleChange, params: visible);
+      EventManager.instance.postEvent(
+          AnyVideoPlayerEventType.controlsVisibleChange,
+          params: visible);
       controlsVisible = visible;
     });
   }

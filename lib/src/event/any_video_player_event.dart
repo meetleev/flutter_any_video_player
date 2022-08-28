@@ -1,6 +1,7 @@
 import 'any_video_player_event_type.dart';
 
-typedef AnyVideoPlayerEventListener = void Function(AnyVideoPlayerEventType eventType, dynamic params);
+typedef AnyVideoPlayerEventListener = void Function(
+    AnyVideoPlayerEventType eventType, dynamic params);
 
 class EventManager {
   static final EventManager _instance = EventManager._();

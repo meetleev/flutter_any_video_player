@@ -35,7 +35,8 @@ class _VideoEventPageState extends State<VideoEventPage> {
         _event = 'seekTo $params';
         break;
       case AnyVideoPlayerEventType.controlsVisibleChange:
-        _event = 'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
+        _event =
+            'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
         break;
       case AnyVideoPlayerEventType.finished:
         print('finished');

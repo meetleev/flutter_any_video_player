@@ -83,11 +83,12 @@ class AnyVideoPlayerController {
                 closedCaptionFile: dataSource.closedCaptionFile);
           } else {
             FlutterError.presentError(const FlutterErrorDetails(
-                exception: 'file does not exists!', library: Constants.libraryName));
+                exception: 'file does not exists!',
+                library: Constants.libraryName));
           }
         } catch (e, s) {
-          FlutterError.presentError(
-              FlutterErrorDetails(exception: e, stack: s, library: Constants.libraryName));
+          FlutterError.presentError(FlutterErrorDetails(
+              exception: e, stack: s, library: Constants.libraryName));
         }
         break;
     }
@@ -99,7 +100,8 @@ class AnyVideoPlayerController {
   }
 
   /// Listen on the given [listener].
-  void addEventListener(AnyVideoPlayerEventListener listener) => _eventManager.addEventListener(listener);
+  void addEventListener(AnyVideoPlayerEventListener listener) =>
+      _eventManager.addEventListener(listener);
 
   /// Remove the given [listener].
   void removeEventListener(AnyVideoPlayerEventListener listener) =>
@@ -126,7 +128,8 @@ class AnyVideoPlayerController {
   }
 
   static AnyVideoPlayerController of(BuildContext context) {
-    final provider = context.dependOnInheritedWidgetOfExactType<AnyVideoPlayerControllerProvider>()!;
+    final provider = context.dependOnInheritedWidgetOfExactType<
+        AnyVideoPlayerControllerProvider>()!;
     return provider.controller;
   }
 }
@@ -134,9 +137,11 @@ class AnyVideoPlayerController {
 class AnyVideoPlayerControllerProvider extends InheritedWidget {
   final AnyVideoPlayerController controller;
 
-  const AnyVideoPlayerControllerProvider({Key? key, required Widget child, required this.controller})
+  const AnyVideoPlayerControllerProvider(
+      {Key? key, required Widget child, required this.controller})
       : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(AnyVideoPlayerControllerProvider oldWidget) => oldWidget.controller != controller;
+  bool updateShouldNotify(AnyVideoPlayerControllerProvider oldWidget) =>
+      oldWidget.controller != controller;
 }

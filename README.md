@@ -31,7 +31,7 @@ Please make sure to dispose both controller widgets after use. For example by ov
 ```dart
 @override
 void dispose() {
-  anyVideoPlayerController.disposeAll();
+  anyVideoPlayerController.dispose();
   super.dispose();
 }
 ```
