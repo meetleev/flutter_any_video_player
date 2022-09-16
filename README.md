@@ -17,8 +17,7 @@ dependencies:
 ## Usage
 
 ```dart
-import 'package:chewie/chewie.dart';
- AnyVideoPlayerController anyVideoPlayerController = AnyVideoPlayerController(
+AnyVideoPlayerController anyVideoPlayerController = AnyVideoPlayerController(
             dataSource: VideoPlayerDataSource.network('https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
             controlsConf: ControlsConfiguration(paddingBottom: 10))
 
