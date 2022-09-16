@@ -1,3 +1,7 @@
+## 0.0.4+1
+
+* update readme.md
+
 ## 0.0.4
 
 * support video player event [initialized, play, pause, seekTo, finished, controlsVisibleChange]
