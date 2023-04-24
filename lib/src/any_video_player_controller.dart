@@ -17,10 +17,10 @@ class AnyVideoPlayerController {
   /// The placeholder is displayed underneath the Video before it is initialized or played.
   final Widget? placeholder;
 
-  ///Flag used to store full screen mode state.
-  bool _isFullScreen = false;
+  /// Flag used to store full screen mode state.
+  final bool _isFullScreen = false;
 
-  ///Flag used to store full screen mode state.
+  /// Flag used to store full screen mode state.
   bool get isFullScreen => _isFullScreen;
 
   /// Whether or not to show the controls at all

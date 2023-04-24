@@ -23,7 +23,7 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
         mediaData: mediaData);
     final barHeight = 48.0 * 1.5 * (0 < widthScale ? widthScale : 1);
     var bottom = controlsConf.paddingBottom + offset / 2;
-    final iconColor = Theme.of(context).textTheme.button!.color;
+    final iconColor = Theme.of(context).textTheme.labelLarge!.color;
     return buildMain(
       child: AbsorbPointer(
         absorbing: !controlsVisible,
@@ -132,7 +132,7 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
           AnyVideoProgressColors(
             playedColor: Theme.of(context).colorScheme.secondary,
             handleColor: Theme.of(context).colorScheme.secondary,
-            bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
+            bufferedColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
             backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
           ),
     ));
