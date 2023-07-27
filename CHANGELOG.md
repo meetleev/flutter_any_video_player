@@ -1,3 +1,7 @@
+## 0.0.5
+
+* upgrade video_player to 2.7.0
+
 ## 0.0.4+3
 
 * Aligns Dart and Flutter SDK constraints.

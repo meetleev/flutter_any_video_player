@@ -2,7 +2,6 @@ import 'package:any_video_player/any_video_player.dart';
 import 'package:example/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
-import 'package:path_provider/path_provider.dart';
 
 class BarAlignVideoBottomPage extends StatefulWidget {
   const BarAlignVideoBottomPage({Key? key}) : super(key: key);

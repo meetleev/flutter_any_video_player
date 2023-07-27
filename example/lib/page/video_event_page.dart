@@ -1,5 +1,6 @@
 import 'package:any_video_player/any_video_player.dart';
 import 'package:example/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class VideoEventPage extends StatefulWidget {
@@ -39,7 +40,9 @@ class _VideoEventPageState extends State<VideoEventPage> {
             'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
         break;
       case AnyVideoPlayerEventType.finished:
-        print('finished');
+        if (kDebugMode) {
+          print('finished');
+        }
         _event = 'finished';
         break;
     }

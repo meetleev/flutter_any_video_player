@@ -61,7 +61,8 @@ class AnyVideoPlayerController {
       : controlsConfiguration = controlsConf ?? ControlsConfiguration() {
     switch (dataSource.type) {
       case VideoPlayerDataSourceType.network:
-        videoPlayerController = VideoPlayerController.network(dataSource.url,
+        videoPlayerController = VideoPlayerController.networkUrl(
+            Uri.parse(dataSource.url),
             videoPlayerOptions: dataSource.videoPlayerOptions,
             httpHeaders: dataSource.headers,
             closedCaptionFile: dataSource.closedCaptionFile,
