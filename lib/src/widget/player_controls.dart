@@ -8,7 +8,7 @@ import 'material_controls.dart';
 class PlayerControls extends StatefulWidget {
   final AnyVideoPlayerController controller;
 
-  const PlayerControls({Key? key, required this.controller}) : super(key: key);
+  const PlayerControls({super.key, required this.controller});
 
   @override
   State<PlayerControls> createState() => _PlayerControlsState();

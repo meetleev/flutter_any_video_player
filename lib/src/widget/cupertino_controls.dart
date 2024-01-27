@@ -8,7 +8,7 @@ import '../utils.dart';
 import 'center_play_button.dart';
 
 class CupertinoControls extends StatefulWidget {
-  const CupertinoControls({Key? key}) : super(key: key);
+  const CupertinoControls({super.key});
 
   @override
   State<CupertinoControls> createState() => CupertinoControlsState();

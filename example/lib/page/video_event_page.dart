@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class VideoEventPage extends StatefulWidget {
-  const VideoEventPage({Key? key}) : super(key: key);
+  const VideoEventPage({super.key});
 
   @override
   State<VideoEventPage> createState() => _VideoEventPageState();

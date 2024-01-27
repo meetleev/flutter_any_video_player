@@ -1,11 +1,12 @@
 import 'package:any_video_player/any_video_player.dart';
 import 'package:example/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DataSourcePage extends StatefulWidget {
-  const DataSourcePage({Key? key}) : super(key: key);
+  const DataSourcePage({super.key});
 
   @override
   State<DataSourcePage> createState() => _DataSourcePageState();
@@ -49,6 +50,10 @@ class _DataSourcePageState extends State<DataSourcePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> buttonLabs = ['asset', 'network'];
+    if (!kIsWeb) {
+      buttonLabs.add('file');
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Data source'),
@@ -64,7 +69,7 @@ class _DataSourcePageState extends State<DataSourcePage> {
                     children: [
                       GroupButton(
                         controller: _groupButtonController,
-                        buttons: const ['asset', 'network', 'file'],
+                        buttons: buttonLabs,
                         onSelected: (title, idx, selected) {
                           _groupButtonController.selectIndex(idx);
                           _loadVideo(VideoPlayerDataSourceType.values[idx]);

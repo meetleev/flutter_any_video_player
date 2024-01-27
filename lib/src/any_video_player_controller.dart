@@ -48,8 +48,7 @@ class AnyVideoPlayerController {
   final EventManager _eventManager = EventManager.instance;
 
   AnyVideoPlayerController(
-      {Key? key,
-      required this.dataSource,
+      {required this.dataSource,
       this.backgroundColor,
       this.placeholder,
       this.showControls = true,
@@ -138,8 +137,7 @@ class AnyVideoPlayerControllerProvider extends InheritedWidget {
   final AnyVideoPlayerController controller;
 
   const AnyVideoPlayerControllerProvider(
-      {Key? key, required Widget child, required this.controller})
-      : super(key: key, child: child);
+      {super.key, required super.child, required this.controller});
 
   @override
   bool updateShouldNotify(AnyVideoPlayerControllerProvider oldWidget) =>

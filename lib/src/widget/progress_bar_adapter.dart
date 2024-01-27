@@ -11,9 +11,8 @@ class VideoProgressBarAdapter extends StatelessWidget {
     this.onDragEnd,
     this.onDragStart,
     this.onDragUpdate,
-    Key? key,
-  })  : colors = colors ?? AnyVideoProgressColors(),
-        super(key: key);
+    super.key,
+  }) : colors = colors ?? AnyVideoProgressColors();
 
   final AnyVideoPlayerController controller;
   final AnyVideoProgressColors colors;

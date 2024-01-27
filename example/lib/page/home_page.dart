@@ -11,7 +11,7 @@ import 'video_bar_padding_bottom_page.dart';
 import 'bar_align_video_bottom_page.dart';
 
 class MaterialHomePage extends StatefulWidget {
-  const MaterialHomePage({Key? key, required this.title}) : super(key: key);
+  const MaterialHomePage({super.key, required this.title});
 
   final String title;
 

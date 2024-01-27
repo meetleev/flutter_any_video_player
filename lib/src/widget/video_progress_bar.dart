@@ -13,12 +13,11 @@ class AnyVideoProgressBar extends StatefulWidget {
     this.onDragEnd,
     this.onDragStart,
     this.onDragUpdate,
-    Key? key,
+    super.key,
     required this.barHeight,
     required this.handleHeight,
     required this.drawShadow,
-  })  : colors = colors ?? AnyVideoProgressColors(),
-        super(key: key);
+  }) : colors = colors ?? AnyVideoProgressColors();
 
   final AnyVideoPlayerController controller;
   final AnyVideoProgressColors colors;

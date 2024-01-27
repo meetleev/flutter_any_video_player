@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 
 class VideoBarPaddingBottomPage extends StatefulWidget {
-  const VideoBarPaddingBottomPage({Key? key}) : super(key: key);
+  const VideoBarPaddingBottomPage({super.key});
 
   @override
   State<VideoBarPaddingBottomPage> createState() =>
