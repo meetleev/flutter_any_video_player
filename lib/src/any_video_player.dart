@@ -5,6 +5,7 @@ import 'widget/player_controls.dart';
 class AnyVideoPlayer extends StatefulWidget {
   /// the controller of [AnyVideoPlayer].
   final AnyVideoPlayerController controller;
+
   /// Whether to automatically destroy the controller
   final bool isAutoDisposeController;
 
