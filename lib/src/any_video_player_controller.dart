@@ -1,15 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 
-import 'package:any_video_player/src/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../any_video_player.dart';
-import 'event/any_video_player_event.dart';
+import 'constants.dart';
+
+const _defaultHideControlsTimer = Duration(seconds: 3);
 
 class AnyVideoPlayerController {
-  static const defaultHideControlsTimer = Duration(seconds: 3);
-
   late VideoPlayerController videoPlayerController;
 
   final VideoPlayerDataSource dataSource;
@@ -45,7 +45,7 @@ class AnyVideoPlayerController {
   /// Color of the background, when no frame is displayed.
   final Color? backgroundColor;
 
-  final EventManager _eventManager = EventManager.instance;
+  final StreamController _streamController = StreamController.broadcast();
 
   AnyVideoPlayerController(
       {required this.dataSource,
@@ -55,7 +55,8 @@ class AnyVideoPlayerController {
       this.showPlayButton = true,
       this.customControls,
       this.isLive = false,
-      this.hideControlsTimer = defaultHideControlsTimer,
+      bool isAutoInitialize = true,
+      this.hideControlsTimer = _defaultHideControlsTimer,
       ControlsConfiguration? controlsConf})
       : controlsConfiguration = controlsConf ?? ControlsConfiguration() {
     switch (dataSource.type) {
@@ -91,39 +92,57 @@ class AnyVideoPlayerController {
         }
         break;
     }
-    initializeVideo();
+    if (isAutoInitialize) {
+      initialize();
+    }
   }
 
-  dispose() {
-    videoPlayerController.dispose();
+  Stream<T> on<T>() {
+    if (dynamic == T) {
+      return _streamController.stream as Stream<T>;
+    }
+    return _streamController.stream.where((event) => event is T).cast<T>();
+  }
+
+  /// emit event
+  void emit<T>(T event) {
+    _streamController.add(event);
   }
 
   /// Listen on the given [listener].
-  void addEventListener(AnyVideoPlayerEventListener listener) =>
-      _eventManager.addEventListener(listener);
-
-  /// Remove the given [listener].
-  void removeEventListener(AnyVideoPlayerEventListener listener) =>
-      _eventManager.removeEventListener(listener);
+  StreamSubscription<AnyVideoPlayerEvent> addPlayerEventListener(
+      AnyVideoPlayerEventListener listener) {
+    return on<AnyVideoPlayerEvent>().listen(listener);
+  }
 
   Future<void> play() async {
     await videoPlayerController.play();
-    _eventManager.postEvent(AnyVideoPlayerEventType.play);
+    emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.play));
   }
 
   Future<void> pause() async {
     await videoPlayerController.pause();
-    _eventManager.postEvent(AnyVideoPlayerEventType.pause);
+    emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.pause));
   }
 
   Future<void> seekTo(Duration position) async {
     await videoPlayerController.seekTo(position);
-    _eventManager.postEvent(AnyVideoPlayerEventType.seekTo, params: position);
+    emit(AnyVideoPlayerEvent(
+        eventType: AnyVideoPlayerEventType.seekTo, data: position));
   }
 
-  Future<void> initializeVideo() async {
+  Future<void> setLooping(bool loop) async {
+    await videoPlayerController.setLooping(loop);
+  }
+
+  Future<void> initialize() async {
     await videoPlayerController.initialize();
-    _eventManager.postEvent(AnyVideoPlayerEventType.initialized);
+    emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.initialized));
+  }
+
+  dispose() {
+    _streamController.close();
+    videoPlayerController.dispose();
   }
 
   static AnyVideoPlayerController of(BuildContext context) {

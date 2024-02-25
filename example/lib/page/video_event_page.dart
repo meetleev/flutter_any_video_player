@@ -12,17 +12,18 @@ class VideoEventPage extends StatefulWidget {
 
 class _VideoEventPageState extends State<VideoEventPage> {
   AnyVideoPlayerController? _anyVideoPlayerController;
-  late String _event = '';
+  String _event = '';
 
   @override
   void initState() {
     super.initState();
-    _loadVideo(true);
-    _anyVideoPlayerController!.addEventListener(_onPlayerEvent);
+    _loadVideo();
+    _anyVideoPlayerController!.addPlayerEventListener(_onPlayerEvent);
   }
 
-  _onPlayerEvent(AnyVideoPlayerEventType eventType, dynamic params) {
-    switch (eventType) {
+  void _onPlayerEvent(AnyVideoPlayerEvent event) {
+    final params = event.data;
+    switch (event.eventType) {
       case AnyVideoPlayerEventType.initialized:
         _event = 'initialized';
         break;
@@ -40,20 +41,18 @@ class _VideoEventPageState extends State<VideoEventPage> {
             'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
         break;
       case AnyVideoPlayerEventType.finished:
-        if (kDebugMode) {
-          print('finished');
-        }
         _event = 'finished';
         break;
     }
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
-  _loadVideo(bool align) {
+  _loadVideo() {
     _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
-        dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
-        controlsConf: ControlsConfiguration(autoAlignVideoBottom: align));
+        dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
     setState(() {});
   }
 
@@ -61,28 +60,26 @@ class _VideoEventPageState extends State<VideoEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('align video bottom'),
+        title: const Text('VideoPlayer Event'),
       ),
-      extendBodyBehindAppBar: true,
       body: null != _anyVideoPlayerController
-          ? Stack(
-              children: [
-                AnyVideoPlayer(controller: _anyVideoPlayerController!),
-                Container(
-                  alignment: Alignment.topCenter,
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Text(_event),
-                )
-              ],
-            )
+          ? Stack(children: [
+              AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              Container(
+                alignment: Alignment.topCenter,
+                padding: const EdgeInsets.only(top: 100),
+                child: Text(
+                  _event,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              )
+            ])
           : Container(),
     );
   }
 
   @override
   void dispose() {
-    _anyVideoPlayerController?.removeEventListener(_onPlayerEvent);
-    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }

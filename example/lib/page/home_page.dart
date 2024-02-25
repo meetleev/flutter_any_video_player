@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:example/constants.dart';
 import 'package:example/page/data_source_page.dart';
 import 'package:example/page/video_event_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'video_bar_padding_bottom_page.dart';
-import 'bar_align_video_bottom_page.dart';
 
 class MaterialHomePage extends StatefulWidget {
   const MaterialHomePage({super.key, required this.title});
@@ -42,9 +42,6 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
     return [
       _buildExampleElementWidget('Data source', () {
         _navigateToPage(const DataSourcePage());
-      }),
-      _buildExampleElementWidget('bottom bar align video bottom', () {
-        _navigateToPage(const BarAlignVideoBottomPage());
       }),
       _buildExampleElementWidget('video bottom bar padding bottom', () {
         _navigateToPage(const VideoBarPaddingBottomPage());
@@ -85,6 +82,7 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
 
   ///Save video to file, so we can use it later
   Future _saveAssetVideoToFile() async {
+    if (kIsWeb) return;
     var content = await rootBundle.load(assetVideoUrl);
     final directory = await getTemporaryDirectory();
     File file = File('${directory.path}/$fileVideoName');

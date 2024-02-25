@@ -22,19 +22,17 @@ class ControlsConfiguration {
   /// The colors to use for background on Material.
   final Color materialBackgroundColor;
 
+  /// The colors to use for icon on Material.
   final Color materialIconColor;
 
+  /// The colors to use for icon on Cupertino.
   final Color cupertinoIconColor;
-
-  /// The autoAlignVideoBottom to use for automatically align video bottom. default true
-  final bool autoAlignVideoBottom;
 
   ControlsConfiguration(
       {this.materialProgressColors,
       this.cupertinoProgressColors,
       this.paddingBottom = 0,
-      this.autoAlignVideoBottom = true,
-      this.materialBackgroundColor = Colors.black54,
+      this.materialBackgroundColor = Colors.black12,
       this.materialIconColor = Colors.white,
       this.cupertinoBackgroundColor = defaultCupertinoBackgroundColor,
       this.cupertinoIconColor = defaultCupertinoIconColor});

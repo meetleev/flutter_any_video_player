@@ -23,7 +23,7 @@ class _DataSourcePageState extends State<DataSourcePage> {
     _loadVideo(VideoPlayerDataSourceType.values[0]);
   }
 
-  _loadVideo(VideoPlayerDataSourceType type) {
+  void _loadVideo(VideoPlayerDataSourceType type) {
     _anyVideoPlayerController?.dispose();
     switch (type) {
       case VideoPlayerDataSourceType.asset:
@@ -58,35 +58,27 @@ class _DataSourcePageState extends State<DataSourcePage> {
       appBar: AppBar(
         title: const Text('Data source'),
       ),
-      extendBodyBehindAppBar: true,
       body: null != _anyVideoPlayerController
-          ? Stack(
-              children: [
-                AnyVideoPlayer(controller: _anyVideoPlayerController!),
-                Container(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Row(
-                    children: [
-                      GroupButton(
-                        controller: _groupButtonController,
-                        buttons: buttonLabs,
-                        onSelected: (title, idx, selected) {
-                          _groupButtonController.selectIndex(idx);
-                          _loadVideo(VideoPlayerDataSourceType.values[idx]);
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
+          ? Stack(children: [
+              AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              Container(
+                  margin: const EdgeInsets.only(top: 100),
+                  alignment: Alignment.topCenter,
+                  child: GroupButton(
+                    controller: _groupButtonController,
+                    buttons: buttonLabs,
+                    onSelected: (title, idx, selected) {
+                      _groupButtonController.selectIndex(idx);
+                      _loadVideo(VideoPlayerDataSourceType.values[idx]);
+                    },
+                  ))
+            ])
           : Container(),
     );
   }
 
   @override
   void dispose() {
-    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }

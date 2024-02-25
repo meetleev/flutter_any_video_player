@@ -21,28 +21,25 @@ class CenterPlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      child: Center(
-        child: AnimatedOpacity(
-          opacity: show ? 1.0 : 0.0,
-          duration: const Duration(milliseconds: 300),
-          child: Container(
-            constraints: const BoxConstraints.tightFor(width: 72, height: 72),
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              shape: BoxShape.circle,
-            ),
-            child: AdaptiveButton(
-              iconSize: 32,
-              icon: isFinished
-                  ? Icon(Icons.replay, color: iconColor)
-                  : AnimatedPlayPause(
-                      color: iconColor,
-                      playing: isPlaying,
-                    ),
-              onPressed: onPressed,
-            ),
+    return Center(
+      child: AnimatedOpacity(
+        opacity: show ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          constraints: const BoxConstraints.tightFor(width: 72, height: 72),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            shape: BoxShape.circle,
+          ),
+          child: AdaptiveButton(
+            icon: isFinished
+                ? Icon(Icons.replay, color: iconColor, size: 32)
+                : AnimatedPlayPause(
+                    color: iconColor,
+                    playing: isPlaying,
+                    scale: 2,
+                  ),
+            onPressed: onPressed,
           ),
         ),
       ),
@@ -53,13 +50,13 @@ class CenterPlayButton extends StatelessWidget {
 /// A widget that animates implicitly between a play and a pause icon.
 class AnimatedPlayPause extends StatefulWidget {
   const AnimatedPlayPause({
-    Key? key,
+    super.key,
     required this.playing,
-    this.size,
+    this.scale = 1,
     this.color,
-  }) : super(key: key);
+  });
 
-  final double? size;
+  final double scale;
   final bool playing;
   final Color? color;
 
@@ -95,10 +92,10 @@ class AnimatedPlayPauseState extends State<AnimatedPlayPause>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Transform.scale(
+      scale: widget.scale,
       child: AnimatedIcon(
         color: widget.color,
-        size: widget.size,
         icon: AnimatedIcons.play_pause,
         progress: animationController,
       ),

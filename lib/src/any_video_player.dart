@@ -1,7 +1,6 @@
-import 'package:any_video_player/src/event/any_video_player_event_type.dart';
-import 'package:any_video_player/src/widget/player_controls.dart';
 import 'package:flutter/widgets.dart';
-import 'any_video_player_controller.dart';
+import '../any_video_player.dart';
+import 'widget/player_controls.dart';
 
 class AnyVideoPlayer extends StatefulWidget {
   final AnyVideoPlayerController controller;
@@ -15,7 +14,7 @@ class AnyVideoPlayer extends StatefulWidget {
 class AnyVideoPlayerState extends State<AnyVideoPlayer> {
   @override
   void initState() {
-    widget.controller.addEventListener(_onPlayerEvent);
+    widget.controller.addPlayerEventListener(_onPlayerEvent);
     super.initState();
   }
 
@@ -30,13 +29,15 @@ class AnyVideoPlayerState extends State<AnyVideoPlayer> {
 
   @override
   void dispose() {
-    widget.controller.removeEventListener(_onPlayerEvent);
+    widget.controller.dispose();
     super.dispose();
   }
 
-  void _onPlayerEvent(eventType, params) {
-    if (AnyVideoPlayerEventType.initialized == eventType) {
-      setState(() {});
+  void _onPlayerEvent(AnyVideoPlayerEvent event) {
+    if (AnyVideoPlayerEventType.initialized == event.eventType) {
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 }

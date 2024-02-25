@@ -2,6 +2,7 @@
 
 * Updates minimum supported SDK version to Flutter 3.10/Dart 3.0.
 * upgrade video_player to 2.8.2
+* fixed some bugs
 
 ## 0.0.5
 

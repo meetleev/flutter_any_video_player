@@ -29,3 +29,5 @@ migrate_working_dir/
 .packages
 build/
 test/
+.flutter-plugins
+.flutter-plugins-dependencies

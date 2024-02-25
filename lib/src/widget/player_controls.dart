@@ -5,74 +5,81 @@ import 'package:video_player/video_player.dart';
 import 'cupertino_controls.dart';
 import 'material_controls.dart';
 
-class PlayerControls extends StatefulWidget {
+class PlayerControls extends StatelessWidget {
   final AnyVideoPlayerController controller;
 
   const PlayerControls({super.key, required this.controller});
 
   @override
-  State<PlayerControls> createState() => _PlayerControlsState();
-}
-
-class _PlayerControlsState extends State<PlayerControls> {
-  @override
   Widget build(BuildContext context) {
     final backgroundColor =
         Theme.of(context).textTheme.bodyLarge!.backgroundColor;
-    final AnyVideoPlayerController controller = widget.controller;
-    double? aspectRatio;
-    if (controller.isFullScreen) {}
-    aspectRatio ??= 16 / 9;
-    return Center(
-      child: Container(
-        color: controller.backgroundColor ?? backgroundColor,
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: AspectRatio(
-          aspectRatio: aspectRatio,
-          child: _buildPlayerControls(context, controller),
-        ),
-      ),
+    // if (controller.isFullScreen) {}
+    final videoController = controller.videoPlayerController;
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        MediaQueryData mediaQueryData = MediaQuery.of(context);
+        bool needFix = false;
+        BoxConstraints fixConstraints = constraints;
+        Size fixSize = videoController.value.size.isEmpty
+            ? mediaQueryData.size
+            : videoController.value.size;
+        if (!constraints.hasBoundedHeight || !constraints.hasBoundedWidth) {
+          if (constraints.hasBoundedWidth) {
+            double height =
+                constraints.maxWidth * fixSize.height / fixSize.width;
+            fixConstraints = BoxConstraints.expand(
+                width: fixConstraints.maxWidth, height: height);
+          } else if (constraints.hasBoundedHeight) {
+            double width =
+                constraints.maxHeight * fixSize.width / fixSize.height;
+            fixConstraints = BoxConstraints.expand(
+                width: width, height: fixConstraints.maxHeight);
+          } else {
+            fixConstraints = BoxConstraints.expand(
+                width: fixSize.width, height: fixSize.height);
+          }
+          needFix = true;
+        }
+        // debugPrint('fixConstraints:$fixConstraints');
+        return Center(
+          child: Container(
+            color: needFix
+                ? Colors.transparent
+                : (controller.backgroundColor ?? backgroundColor),
+            constraints: fixConstraints,
+            child: _buildPlayerControls(
+                context,
+                Size(fixConstraints.maxWidth, fixConstraints.maxHeight),
+                controller),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildPlayerControls(
-      BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
-    var controller = anyVideoPlayerController.videoPlayerController;
+  Widget _buildPlayerControls(BuildContext context, Size size,
+      AnyVideoPlayerController anyVideoPlayerController) {
+    final videoController = anyVideoPlayerController.videoPlayerController;
+    if (!videoController.value.isInitialized) {
+      return anyVideoPlayerController.placeholder ?? Container();
+    }
     return Stack(
+      alignment: Alignment.center,
       children: [
-        if (null != anyVideoPlayerController.placeholder)
-          anyVideoPlayerController.placeholder!,
-        if (controller.value.isInitialized)
-          InteractiveViewer(
-            child: Center(
-              child: ClipRect(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FittedBox(
-                    // fit: BoxFit.fill,
-                    child: SizedBox(
-                      width: controller.value.size.width,
-                      height: controller.value.size.height,
-                      child: VideoPlayer(controller),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        InteractiveViewer(
+          child: Center(
+            child: VideoPlayer(videoController),
           ),
-        if (controller.value.isInitialized)
-          !anyVideoPlayerController.isFullScreen
-              ? _buildControls(context, anyVideoPlayerController)
-              : SafeArea(
-                  bottom: false,
-                  child: _buildControls(context, anyVideoPlayerController),
-                ),
+        ),
+        Positioned.fill(
+          child: _buildControls(context, anyVideoPlayerController),
+        )
       ],
     );
   }
 
-  _buildControls(
+  Widget _buildControls(
       BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
     if (anyVideoPlayerController.showControls) {
       return anyVideoPlayerController.customControls ??
@@ -81,7 +88,7 @@ class _PlayerControlsState extends State<PlayerControls> {
     return const SizedBox();
   }
 
-  _controlsAdapter(BuildContext context) {
+  Widget _controlsAdapter(BuildContext context) {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:any_video_player/src/event/any_video_player_event.dart';
-import 'package:any_video_player/src/widget/progress_bar_adapter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../any_video_player.dart';
 import '../video_progress_colors.dart';
 import 'center_play_button.dart';
+import 'progress_bar_adapter.dart';
 
 abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   AnyVideoPlayerController? _anyVPController;
@@ -22,9 +21,15 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
 
   bool wasLoading = false;
   Timer? _hideControlsTimer;
-  bool _displayTapped = false;
   bool _dragging = false;
   bool controlsVisible = true;
+
+  bool get isFinished {
+    if (controller.value.isInitialized) {
+      return controller.value.position >= controller.value.duration;
+    }
+    return false;
+  }
 
   @override
   void initState() {
@@ -61,15 +66,16 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   void _updateState() {
     if (mounted) {
       wasLoading = controller.value.isBuffering;
-      if (controller.value.isInitialized) {
-        final bool isFinished =
-            controller.value.position >= controller.value.duration;
-        if (isFinished) {
-          EventManager.instance.postEvent(AnyVideoPlayerEventType.finished);
+      if (!isFinished) {
+        if (!controller.value.isPlaying) {
+          _hideControlsTimer?.cancel();
           changePlayerControlsVisible(true);
         }
+        setState(() {});
+      } else {
+        _hideControlsTimer?.cancel();
+        changePlayerControlsVisible(true);
       }
-      setState(() {});
     }
   }
 
@@ -82,12 +88,8 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
       } else {
         _restartControlsTimer();
         if (!controller.value.isInitialized) {
-          anyVPController
-              .initializeVideo()
-              .then((value) => anyVPController.play());
+          anyVPController.initialize().then((value) => anyVPController.play());
         } else {
-          final isFinished =
-              controller.value.position >= controller.value.duration;
           if (isFinished) {
             anyVPController.seekTo(Duration.zero);
           }
@@ -100,14 +102,11 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   void _restartControlsTimer() {
     _hideControlsTimer?.cancel();
     _startHideControlsTimer();
-    _displayTapped = true;
     changePlayerControlsVisible(true);
   }
 
   void _startHideControlsTimer() {
-    final hideControlsTimer = anyVPController.hideControlsTimer.isNegative
-        ? AnyVideoPlayerController.defaultHideControlsTimer
-        : anyVPController.hideControlsTimer;
+    final hideControlsTimer = anyVPController.hideControlsTimer;
     _hideControlsTimer = Timer(hideControlsTimer, () {
       changePlayerControlsVisible(false);
     });
@@ -115,29 +114,27 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
 
   Widget buildMain({required Widget child}) {
     return GestureDetector(
-      onTap: _restartControlsTimer,
+      onTap: () => _restartControlsTimer(),
       child: child,
     );
   }
 
   Widget buildHitArea() {
-    final bool isFinished =
-        controller.value.position >= controller.value.duration;
     final bool showPlayButton = anyVPController.showPlayButton &&
         !controller.value.isPlaying &&
         !_dragging;
 
     return GestureDetector(
       onTap: () {
+        if (!controller.value.isInitialized) return;
         if (controller.value.isPlaying) {
-          if (_displayTapped) {
+          if (controlsVisible) {
             changePlayerControlsVisible(false);
           } else {
             _restartControlsTimer();
           }
         } else {
           playPause();
-          changePlayerControlsVisible(false);
         }
       },
       child: CenterPlayButton(
@@ -189,9 +186,9 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   /// Called when player controls visibility should be changed.
   void changePlayerControlsVisible(bool visible) {
     setState(() {
-      EventManager.instance.postEvent(
-          AnyVideoPlayerEventType.controlsVisibleChange,
-          params: visible);
+      anyVPController.emit(AnyVideoPlayerEvent(
+          eventType: AnyVideoPlayerEventType.controlsVisibleChange,
+          data: visible));
       controlsVisible = visible;
     });
   }

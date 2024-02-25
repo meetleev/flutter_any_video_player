@@ -22,12 +22,11 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
     _loadVideo(20);
   }
 
-  _loadVideo(double paddingBottom) {
+  void _loadVideo(double paddingBottom) {
     _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
-        controlsConf: ControlsConfiguration(
-            paddingBottom: paddingBottom, autoAlignVideoBottom: false));
+        controlsConf: ControlsConfiguration(paddingBottom: paddingBottom));
     setState(() {});
   }
 
@@ -37,35 +36,27 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
       appBar: AppBar(
         title: const Text('video bar padding bottom'),
       ),
-      extendBodyBehindAppBar: true,
       body: null != _anyVideoPlayerController
-          ? Stack(
-              children: [
-                AnyVideoPlayer(controller: _anyVideoPlayerController!),
-                Container(
+          ? Stack(children: [
+              AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              Container(
                   padding: const EdgeInsets.only(top: 100),
-                  child: Row(
-                    children: [
-                      GroupButton(
-                        controller: _groupButtonController,
-                        buttons: const [20, 40, 60, 80, 100],
-                        onSelected: (int title, idx, selected) {
-                          _groupButtonController.selectIndex(idx);
-                          _loadVideo(title.toDouble());
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
+                  alignment: Alignment.topCenter,
+                  child: GroupButton(
+                    controller: _groupButtonController,
+                    buttons: const [20, 40, 60, 80, 100],
+                    onSelected: (int title, idx, selected) {
+                      _groupButtonController.selectIndex(idx);
+                      _loadVideo(title.toDouble());
+                    },
+                  ))
+            ])
           : Container(),
     );
   }
 
   @override
   void dispose() {
-    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }
