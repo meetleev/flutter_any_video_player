@@ -23,7 +23,7 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
   }
 
   void _loadVideo(double paddingBottom) {
-    _anyVideoPlayerController?.dispose();
+    // _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
         controlsConf: ControlsConfiguration(paddingBottom: paddingBottom));
@@ -37,20 +37,22 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
         title: const Text('video bar padding bottom'),
       ),
       body: null != _anyVideoPlayerController
-          ? Stack(children: [
-              AnyVideoPlayer(controller: _anyVideoPlayerController!),
-              Container(
-                  padding: const EdgeInsets.only(top: 100),
-                  alignment: Alignment.topCenter,
-                  child: GroupButton(
-                    controller: _groupButtonController,
-                    buttons: const [20, 40, 60, 80, 100],
-                    onSelected: (int title, idx, selected) {
-                      _groupButtonController.selectIndex(idx);
-                      _loadVideo(title.toDouble());
-                    },
-                  ))
-            ])
+          ? ListView(
+              children: [
+                GroupButton(
+                  controller: _groupButtonController,
+                  buttons: const [20, 40, 60, 80, 100],
+                  onSelected: (int title, idx, selected) {
+                    _groupButtonController.selectIndex(idx);
+                    _loadVideo(title.toDouble());
+                  },
+                ),
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: AnyVideoPlayer(controller: _anyVideoPlayerController!),
+                )
+              ],
+            )
           : Container(),
     );
   }

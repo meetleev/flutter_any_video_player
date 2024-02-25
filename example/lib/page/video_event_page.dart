@@ -50,7 +50,7 @@ class _VideoEventPageState extends State<VideoEventPage> {
   }
 
   _loadVideo() {
-    _anyVideoPlayerController?.dispose();
+    // _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
     setState(() {});
@@ -64,10 +64,12 @@ class _VideoEventPageState extends State<VideoEventPage> {
       ),
       body: null != _anyVideoPlayerController
           ? Stack(children: [
-              AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child:
+                      AnyVideoPlayer(controller: _anyVideoPlayerController!)),
               Container(
                 alignment: Alignment.topCenter,
-                padding: const EdgeInsets.only(top: 100),
                 child: Text(
                   _event,
                   style: const TextStyle(fontSize: 20),

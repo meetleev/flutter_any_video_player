@@ -106,7 +106,9 @@ class AnyVideoPlayerController {
 
   /// emit event
   void emit<T>(T event) {
-    _streamController.add(event);
+    if (!_streamController.isClosed) {
+      _streamController.add(event);
+    }
   }
 
   /// Listen on the given [listener].
@@ -140,9 +142,9 @@ class AnyVideoPlayerController {
     emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.initialized));
   }
 
-  dispose() {
-    _streamController.close();
-    videoPlayerController.dispose();
+  void dispose() async {
+    await _streamController.close();
+    await videoPlayerController.dispose();
   }
 
   static AnyVideoPlayerController of(BuildContext context) {

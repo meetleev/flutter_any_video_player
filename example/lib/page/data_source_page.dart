@@ -24,7 +24,7 @@ class _DataSourcePageState extends State<DataSourcePage> {
   }
 
   void _loadVideo(VideoPlayerDataSourceType type) {
-    _anyVideoPlayerController?.dispose();
+    // _anyVideoPlayerController?.dispose();
     switch (type) {
       case VideoPlayerDataSourceType.asset:
         _anyVideoPlayerController = AnyVideoPlayerController(
@@ -60,9 +60,11 @@ class _DataSourcePageState extends State<DataSourcePage> {
       ),
       body: null != _anyVideoPlayerController
           ? Stack(children: [
-              AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child:
+                      AnyVideoPlayer(controller: _anyVideoPlayerController!)),
               Container(
-                  margin: const EdgeInsets.only(top: 100),
                   alignment: Alignment.topCenter,
                   child: GroupButton(
                     controller: _groupButtonController,

@@ -3,15 +3,21 @@ import '../any_video_player.dart';
 import 'widget/player_controls.dart';
 
 class AnyVideoPlayer extends StatefulWidget {
+  /// the controller of [AnyVideoPlayer].
   final AnyVideoPlayerController controller;
+  /// Whether to automatically destroy the controller
+  final bool isAutoDisposeController;
 
-  const AnyVideoPlayer({super.key, required this.controller});
+  const AnyVideoPlayer(
+      {super.key,
+      required this.controller,
+      this.isAutoDisposeController = true});
 
   @override
-  State<AnyVideoPlayer> createState() => AnyVideoPlayerState();
+  State<AnyVideoPlayer> createState() => _AnyVideoPlayerState();
 }
 
-class AnyVideoPlayerState extends State<AnyVideoPlayer> {
+class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
   @override
   void initState() {
     widget.controller.addPlayerEventListener(_onPlayerEvent);
@@ -29,8 +35,21 @@ class AnyVideoPlayerState extends State<AnyVideoPlayer> {
 
   @override
   void dispose() {
-    widget.controller.dispose();
+    if (widget.isAutoDisposeController) {
+      widget.controller.dispose();
+    }
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(AnyVideoPlayer oldWidget) {
+    if (oldWidget.controller != widget.controller) {
+      widget.controller.addPlayerEventListener(_onPlayerEvent);
+      if (oldWidget.isAutoDisposeController) {
+        oldWidget.controller.dispose();
+      }
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   void _onPlayerEvent(AnyVideoPlayerEvent event) {
