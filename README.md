@@ -22,19 +22,9 @@ dependencies:
 
 ```dart
 AnyVideoPlayerController anyVideoPlayerController = AnyVideoPlayerController(
-            dataSource: VideoPlayerDataSource.network('https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'),
-            controlsConf: ControlsConfiguration(paddingBottom: 10))
+            dataSource: VideoPlayerDataSource.network('https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'));
 
 final playerWidget = AnyVideoPlayer(
   controller: anyVideoPlayerController,
 );
-```
-
-Please make sure to dispose both controller widgets after use. For example by overriding the dispose method of the a `StatefulWidget`:
-```dart
-@override
-void dispose() {
-  anyVideoPlayerController.dispose();
-  super.dispose();
-}
 ```

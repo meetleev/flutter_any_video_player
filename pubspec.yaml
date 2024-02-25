@@ -3,6 +3,9 @@ description: The video_player plugin gives low level access for the video playba
 version: 0.0.6
 homepage: https://github.com/meetleev
 repository: https://github.com/meetleev/flutter_any_video_player
+topics:
+  - video
+  - videoplayer
 
 environment:
   sdk: ">=2.18.0 <4.0.0"
