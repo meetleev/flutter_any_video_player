@@ -1,3 +1,10 @@
+## 0.0.8
+
+* support frame by frame mode
+* optimize bottom actions ui
+* support fullscreen mode
+* support set playbackSpeed
+
 ## 0.0.7
 
 * Updates minimum supported SDK version to Flutter 3.10/Dart 3.0.

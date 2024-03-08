@@ -31,7 +31,7 @@ class ControlsConfiguration {
   ControlsConfiguration(
       {this.materialProgressColors,
       this.cupertinoProgressColors,
-      this.paddingBottom = 0,
+      this.paddingBottom = 10,
       this.materialBackgroundColor = Colors.black12,
       this.materialIconColor = Colors.white,
       this.cupertinoBackgroundColor = defaultCupertinoBackgroundColor,

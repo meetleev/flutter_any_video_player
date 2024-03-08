@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../any_video_player.dart';
@@ -191,5 +191,80 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
           data: visible));
       controlsVisible = visible;
     });
+  }
+
+  @protected
+  Widget buildMoreOptionsRow(Widget leftAction, Widget rightAction) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [leftAction, rightAction]);
+  }
+
+  @protected
+  Widget buildFrameByFrameOption() {
+    return buildMoreOptionsRow(
+        const Text('FBF Enabled'),
+        Switch(
+            value: anyVPController.isFrameByFrameEnabled,
+            onChanged: (bool selected) {
+              anyVPController.setFrameByFrameEnabled(selected);
+              Navigator.of(context).pop();
+            }));
+  }
+
+  @protected
+  Widget buildPlaybackSpeedOption({required VoidCallback onPressed}) {
+    return buildMoreOptionsRow(
+        const Text('PlaybackSpeed'),
+        TextButton(
+          onPressed: onPressed,
+          child: Text('${anyVPController.playBackSpeed.toStringAsFixed(2)}X'),
+        ));
+  }
+
+  @protected
+  List<Widget> buildSpeedOptions() {
+    final List<double> speeds = [
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      1.75,
+      2,
+      4,
+      8,
+      16
+    ];
+    List<Widget> children = [];
+    for (final speed in speeds) {
+      children.add(buildSpeedOptionRow(
+          speed: speed, selected: anyVPController.playBackSpeed == speed));
+      children.add(const Divider());
+    }
+    return children;
+  }
+
+  @protected
+  Widget buildSpeedOptionRow({required double speed, required bool selected}) {
+    return GestureDetector(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        color: Colors.transparent,
+        width: double.infinity,
+        child: buildMoreOptionsRow(
+            Text('${speed}X'),
+            Offstage(
+              offstage: !selected,
+              child: const Icon(Icons.done),
+            )),
+      ),
+      onTap: () {
+        anyVPController
+            .setPlayBackSpeed(speed)
+            .then((value) => Navigator.of(context).pop());
+      },
+    );
   }
 }

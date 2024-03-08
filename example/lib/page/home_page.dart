@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:example/constants.dart';
 import 'package:example/page/data_source_page.dart';
+import 'package:example/page/frame_by_frame_page.dart';
 import 'package:example/page/video_event_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,9 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
       }),
       _buildExampleElementWidget('video event', () {
         _navigateToPage(const VideoEventPage());
+      }),
+      _buildExampleElementWidget('video frame by frame', () {
+        _navigateToPage(const VideoFrameByFramePage());
       }),
     ];
   }

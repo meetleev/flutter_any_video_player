@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:media_data_extractor/media_data_extractor.dart';
 import 'package:video_player/video_player.dart';
 
 import '../any_video_player.dart';
@@ -9,19 +10,34 @@ import 'constants.dart';
 
 const _defaultHideControlsTimer = Duration(seconds: 3);
 
-class AnyVideoPlayerController {
+class AnyVideoPlayerValue {
+  final bool frameByFrameEnabled;
+  final VideoData? videoData;
+
+  /// Flag used to store full screen mode state.
+  final bool isFullScreen;
+
+  AnyVideoPlayerValue(
+      {this.frameByFrameEnabled = false,
+      this.videoData,
+      this.isFullScreen = false});
+
+  AnyVideoPlayerValue copyWith(
+      {bool? frameByFrameEnabled, VideoData? videoData, bool? isFullScreen}) {
+    return AnyVideoPlayerValue(
+        frameByFrameEnabled: frameByFrameEnabled ?? this.frameByFrameEnabled,
+        videoData: videoData ?? this.videoData,
+        isFullScreen: isFullScreen ?? this.isFullScreen);
+  }
+}
+
+class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   late VideoPlayerController videoPlayerController;
 
   final VideoPlayerDataSource dataSource;
 
   /// The placeholder is displayed underneath the Video before it is initialized or played.
   final Widget? placeholder;
-
-  /// Flag used to store full screen mode state.
-  final bool _isFullScreen = false;
-
-  /// Flag used to store full screen mode state.
-  bool get isFullScreen => _isFullScreen;
 
   /// Whether or not to show the controls at all
   final bool showControls;
@@ -47,6 +63,8 @@ class AnyVideoPlayerController {
 
   final StreamController _streamController = StreamController.broadcast();
 
+  MediaDataExtractor? _mediaDataExtractor;
+
   AnyVideoPlayerController(
       {required this.dataSource,
       this.backgroundColor,
@@ -56,9 +74,11 @@ class AnyVideoPlayerController {
       this.customControls,
       this.isLive = false,
       bool isAutoInitialize = true,
+      bool frameByFrameEnabled = false,
       this.hideControlsTimer = _defaultHideControlsTimer,
       ControlsConfiguration? controlsConf})
-      : controlsConfiguration = controlsConf ?? ControlsConfiguration() {
+      : controlsConfiguration = controlsConf ?? ControlsConfiguration(),
+        super(AnyVideoPlayerValue(frameByFrameEnabled: frameByFrameEnabled)) {
     switch (dataSource.type) {
       case VideoPlayerDataSourceType.network:
         videoPlayerController = VideoPlayerController.networkUrl(
@@ -117,9 +137,55 @@ class AnyVideoPlayerController {
     return on<AnyVideoPlayerEvent>().listen(listener);
   }
 
+  bool get isFrameByFrameEnabled => value.frameByFrameEnabled;
+
+  Future<void> setFrameByFrameEnabled(bool enabled) async {
+    if (enabled != isFrameByFrameEnabled) {
+      await pause();
+      if (!enabled) {
+        await setPlayBackSpeed(1);
+      }
+      if (null == value.videoData) {
+        await fetchVideoMetaData();
+      }
+      value = value.copyWith(frameByFrameEnabled: enabled);
+    }
+  }
+
+  double? get frameRate {
+    final videoData = value.videoData;
+    if (null != videoData && videoData.tracks.isNotEmpty) {
+      return videoData.tracks.first?.frameRate ?? 1;
+    }
+    return null;
+  }
+
+  VideoData? get videoData => value.videoData;
+
+  bool get isFullScreen => value.isFullScreen;
+
+  void toggleFullScreen() {
+    emit(AnyVideoPlayerEvent(
+        eventType: AnyVideoPlayerEventType.fullScreenChange,
+        data: !isFullScreen));
+  }
+
+  void onEnterFullScreen() {
+    value = value.copyWith(isFullScreen: true);
+  }
+
+  void onExitFullScreen() {
+    value = value.copyWith(isFullScreen: false);
+  }
+
   Future<void> play() async {
-    await videoPlayerController.play();
-    emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.play));
+    if (videoPlayerController.value.isInitialized) {
+      if (isFrameByFrameEnabled) {
+        videoPlayerController.setPlaybackSpeed(1 / (frameRate ?? 1));
+      }
+      await videoPlayerController.play();
+      emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.play));
+    }
   }
 
   Future<void> pause() async {
@@ -133,18 +199,53 @@ class AnyVideoPlayerController {
         eventType: AnyVideoPlayerEventType.seekTo, data: position));
   }
 
+  Future<void> setPlayBackSpeed(double speed) {
+    return videoPlayerController.setPlaybackSpeed(speed);
+  }
+
+  double get playBackSpeed => videoPlayerController.value.playbackSpeed;
+
+  Duration get position => videoPlayerController.value.position;
+
+  Future<void> jumpPreviousFrame() async {
+    if (isFrameByFrameEnabled) {
+      final int delta = 1000 ~/ frameRate!;
+      await seekTo(position - Duration(milliseconds: delta));
+    }
+  }
+
+  Future<void> jumpNextFrame() async {
+    if (isFrameByFrameEnabled) {
+      final int delta = 1000 ~/ frameRate!;
+      await seekTo(position + Duration(milliseconds: delta));
+    }
+  }
+
   Future<void> setLooping(bool loop) async {
     await videoPlayerController.setLooping(loop);
   }
 
   Future<void> initialize() async {
+    if (isFrameByFrameEnabled) {
+      await fetchVideoMetaData();
+    }
     await videoPlayerController.initialize();
     emit(AnyVideoPlayerEvent(eventType: AnyVideoPlayerEventType.initialized));
   }
 
+  Future<void> fetchVideoMetaData() async {
+    _mediaDataExtractor ??= MediaDataExtractor();
+    final dataType = MediaDataSourceType.values[dataSource.type.index];
+    VideoData videoData = await _mediaDataExtractor!
+        .getVideoData(MediaDataSource(type: dataType, url: dataSource.url));
+    value = value.copyWith(videoData: videoData);
+  }
+
+  @override
   void dispose() async {
     await _streamController.close();
     await videoPlayerController.dispose();
+    super.dispose();
   }
 
   static AnyVideoPlayerController of(BuildContext context) {

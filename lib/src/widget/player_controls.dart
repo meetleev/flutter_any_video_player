@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import 'cupertino_controls.dart';
-import 'material_controls.dart';
 
 class PlayerControls extends StatelessWidget {
   final AnyVideoPlayerController controller;
@@ -92,7 +91,7 @@ class PlayerControls extends StatelessWidget {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
-        return const MaterialControls();
+        // return const MaterialControls();
       // case TargetPlatform.macOS:
       // case TargetPlatform.windows:
       // case TargetPlatform.linux:
@@ -100,7 +99,7 @@ class PlayerControls extends StatelessWidget {
       case TargetPlatform.iOS:
         return const CupertinoControls();
       default:
-        return const MaterialControls();
+        return const CupertinoControls();
     }
   }
 }

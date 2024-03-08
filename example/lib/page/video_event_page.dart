@@ -1,6 +1,5 @@
 import 'package:any_video_player/any_video_player.dart';
 import 'package:example/constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class VideoEventPage extends StatefulWidget {
@@ -38,10 +37,13 @@ class _VideoEventPageState extends State<VideoEventPage> {
         break;
       case AnyVideoPlayerEventType.controlsVisibleChange:
         _event =
-            'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
+        'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
         break;
       case AnyVideoPlayerEventType.finished:
         _event = 'finished';
+        break;
+      case AnyVideoPlayerEventType.fullScreenChange:
+        _event = params as bool ? 'enterScreen' : 'exitScreen';
         break;
     }
     if (mounted) {
@@ -49,7 +51,7 @@ class _VideoEventPageState extends State<VideoEventPage> {
     }
   }
 
-  _loadVideo() {
+  void _loadVideo() {
     // _anyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
@@ -64,18 +66,16 @@ class _VideoEventPageState extends State<VideoEventPage> {
       ),
       body: null != _anyVideoPlayerController
           ? Stack(children: [
-              AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child:
-                      AnyVideoPlayer(controller: _anyVideoPlayerController!)),
-              Container(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  _event,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              )
-            ])
+
+        AnyVideoPlayer(controller: _anyVideoPlayerController!),
+        Container(
+          alignment: Alignment.topCenter,
+          child: Text(
+            _event,
+            style: const TextStyle(fontSize: 20),
+          ),
+        )
+      ])
           : Container(),
     );
   }
