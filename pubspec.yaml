@@ -1,20 +1,21 @@
 name: any_video_player
 description: The video_player plugin gives low level access for the video playback. Advanced video player based on video_player.
-version: 0.0.7
+version: 0.0.8
 homepage: https://github.com/meetleev
 repository: https://github.com/meetleev/flutter_any_video_player
 topics:
   - video
   - videoplayer
+  - framebyframe
 
 environment:
-  sdk: ">=2.18.0 <4.0.0"
-  flutter: ">=3.3.0"
+  sdk: ">=3.1.0 <4.0.0"
+  flutter: ">=3.13.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  video_player: ^2.8.2
+  video_player: ^2.8.3
   media_data_extractor: ^0.0.1
 #    path: ../media_data_extractor
 
