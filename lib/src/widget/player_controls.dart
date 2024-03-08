@@ -91,7 +91,7 @@ class PlayerControls extends StatelessWidget {
     switch (Theme.of(context).platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
-        // return const MaterialControls();
+      // return const MaterialControls();
       // case TargetPlatform.macOS:
       // case TargetPlatform.windows:
       // case TargetPlatform.linux:

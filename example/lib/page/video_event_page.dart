@@ -37,7 +37,7 @@ class _VideoEventPageState extends State<VideoEventPage> {
         break;
       case AnyVideoPlayerEventType.controlsVisibleChange:
         _event =
-        'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
+            'controlsVisibleChange ${params as bool ? 'visible' : 'invisible'}';
         break;
       case AnyVideoPlayerEventType.finished:
         _event = 'finished';
@@ -66,16 +66,15 @@ class _VideoEventPageState extends State<VideoEventPage> {
       ),
       body: null != _anyVideoPlayerController
           ? Stack(children: [
-
-        AnyVideoPlayer(controller: _anyVideoPlayerController!),
-        Container(
-          alignment: Alignment.topCenter,
-          child: Text(
-            _event,
-            style: const TextStyle(fontSize: 20),
-          ),
-        )
-      ])
+              AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              Container(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  _event,
+                  style: const TextStyle(fontSize: 20),
+                ),
+              )
+            ])
           : Container(),
     );
   }
