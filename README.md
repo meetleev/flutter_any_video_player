@@ -16,6 +16,9 @@ dependencies:
 ## Features
 
 * support video player event.
+* support frame by frame mode
+* support fullscreen mode
+* support set playbackSpeed
 * When the video width is larger than the screen width, the bottom progress bar is automatically aligned to the height of the video after scaling.
 
 ## Usage
