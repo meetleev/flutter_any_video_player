@@ -21,6 +21,7 @@ class AnyVideoPlayer extends StatefulWidget {
 
 class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
   get controlsConfiguration => widget.controller.controlsConfiguration;
+  Orientation? _orgOrientation;
 
   AnimatedWidget _defaultRoutePageBuilder(
       BuildContext context,
@@ -50,6 +51,10 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    if (null == _orgOrientation) {
+      final mediaData = MediaQuery.of(context);
+      _orgOrientation = mediaData.orientation;
+    }
     return AnyVideoPlayerControllerProvider(
         controller: widget.controller,
         child: PlayerControls(
@@ -92,8 +97,20 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
     if (isFullScreen) {
       _enterFullScreen();
     } else {
-      Navigator.of(context, rootNavigator: true).pop();
+      final mediaData = MediaQuery.of(context);
+      if (_orgOrientation != mediaData.orientation) {
+        if (Orientation.portrait == _orgOrientation) {
+          SystemChrome.setPreferredOrientations(
+              [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+        } else {
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.landscapeLeft,
+            DeviceOrientation.landscapeRight
+          ]);
+        }
+      }
       widget.controller.onExitFullScreen();
+      Navigator.of(context, rootNavigator: true).pop();
     }
   }
 

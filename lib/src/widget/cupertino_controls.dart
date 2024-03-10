@@ -143,7 +143,10 @@ class _CupertinoControlsState extends ControlsState<CupertinoControls> {
                             ),
                             _buildPosition(),
                             _buildProgressBar(),
-                            _buildRemaining()
+                            _buildRemaining(),
+                            Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: _buildFullScreen())
                           ],
                         )),
             ),
