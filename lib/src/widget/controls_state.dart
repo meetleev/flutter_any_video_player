@@ -224,19 +224,7 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
 
   @protected
   List<Widget> buildSpeedOptions() {
-    final List<double> speeds = [
-      0.25,
-      0.5,
-      0.75,
-      1.0,
-      1.25,
-      1.5,
-      1.75,
-      2,
-      4,
-      8,
-      16
-    ];
+    final List<double> speeds = anyVPController.playbackSpeeds;
     List<Widget> children = [];
     for (final speed in speeds) {
       children.add(buildSpeedOptionRow(

@@ -9,6 +9,19 @@ import '../any_video_player.dart';
 import 'constants.dart';
 
 const _defaultHideControlsTimer = Duration(seconds: 3);
+const List<double> _defaultPlaybackSpeeds = [
+  0.25,
+  0.5,
+  0.75,
+  1.0,
+  1.25,
+  1.5,
+  1.75,
+  2,
+  4,
+  8,
+  16
+];
 
 class AnyVideoPlayerValue {
   final bool frameByFrameEnabled;
@@ -45,6 +58,9 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   /// Whether or not to show the playButton at all
   final bool showPlayButton;
 
+  /// playback speeds
+  final List<double> playbackSpeeds;
+
   /// Defines customised controls. Check [MaterialControls] or
   /// [CupertinoControls] for reference.
   final Widget? customControls;
@@ -71,6 +87,7 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
       this.placeholder,
       this.showControls = true,
       this.showPlayButton = true,
+      this.playbackSpeeds = _defaultPlaybackSpeeds,
       this.customControls,
       this.isLive = false,
       bool isAutoInitialize = true,
