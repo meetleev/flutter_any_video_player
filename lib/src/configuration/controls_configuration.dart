@@ -1,5 +1,6 @@
-import 'package:any_video_player/src/video_progress_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../video_progress_colors.dart';
 
 class ControlsConfiguration {
   static const Color defaultCupertinoBackgroundColor =

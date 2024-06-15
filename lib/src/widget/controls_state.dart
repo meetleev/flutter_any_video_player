@@ -4,7 +4,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../any_video_player.dart';
+import '../any_video_player_controller.dart';
+import '../configuration/controls_configuration.dart';
+import '../events/any_video_player_event.dart';
+import '../events/any_video_player_event_type.dart';
 import '../video_progress_colors.dart';
 import 'center_play_button.dart';
 import 'progress_bar_adapter.dart';

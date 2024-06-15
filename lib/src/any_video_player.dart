@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../any_video_player.dart';
+import 'any_video_player_controller.dart';
+import 'events/any_video_player_event.dart';
+import 'events/any_video_player_event_type.dart';
 import 'widget/player_controls.dart';
 
 class AnyVideoPlayer extends StatefulWidget {

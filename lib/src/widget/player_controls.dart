@@ -1,7 +1,7 @@
-import 'package:any_video_player/src/any_video_player_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../any_video_player_controller.dart';
 import 'cupertino_controls.dart';
 
 class PlayerControls extends StatelessWidget {

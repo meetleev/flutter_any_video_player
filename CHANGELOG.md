@@ -1,3 +1,9 @@
+## 0.1.0
+
+* Updates minimum supported SDK version to Flutter 3.16/Dart 3.2.
+* Upgraded video_player to 2.8.7
+
+
 ## 0.0.9
 
 * Fixed the crash issue where the Android platform cannot obtain certain fields in frame-by-frame mode.

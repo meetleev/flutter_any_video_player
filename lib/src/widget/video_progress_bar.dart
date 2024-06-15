@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:any_video_player/src/video_progress_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../any_video_player.dart';
+import '../any_video_player_controller.dart';
+import '../video_progress_colors.dart';
 
 class AnyVideoProgressBar extends StatefulWidget {
   AnyVideoProgressBar(

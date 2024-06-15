@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:any_video_player/src/widget/material_controls.dart';
+import 'package:any_video_player/src/widget/cupertino_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:media_data_extractor/media_data_extractor.dart';
 import 'package:video_player/video_player.dart';
 
-import '../any_video_player.dart';
+import 'configuration/controls_configuration.dart';
+import 'configuration/video_player_data_source.dart';
 import 'constants.dart';
+import 'events/any_video_player_event.dart';
+import 'events/any_video_player_event_type.dart';
 
 const _defaultHideControlsTimer = Duration(seconds: 3);
 const List<double> _defaultPlaybackSpeeds = [
