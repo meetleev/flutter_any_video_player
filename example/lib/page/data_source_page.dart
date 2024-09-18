@@ -24,7 +24,8 @@ class _DataSourcePageState extends State<DataSourcePage> {
   }
 
   void _loadVideo(VideoPlayerDataSourceType type) {
-    // _anyVideoPlayerController?.dispose();
+    final oldAnyVideoPlayerController = _anyVideoPlayerController;
+    oldAnyVideoPlayerController?.dispose();
     switch (type) {
       case VideoPlayerDataSourceType.asset:
         _anyVideoPlayerController = AnyVideoPlayerController(
@@ -81,6 +82,7 @@ class _DataSourcePageState extends State<DataSourcePage> {
 
   @override
   void dispose() {
+    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }

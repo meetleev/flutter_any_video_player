@@ -41,6 +41,7 @@ class _VideoFrameByFramePageState extends State<VideoFrameByFramePage> {
 
   @override
   void dispose() {
+    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }

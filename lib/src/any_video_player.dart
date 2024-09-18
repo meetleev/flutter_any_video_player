@@ -9,13 +9,7 @@ class AnyVideoPlayer extends StatefulWidget {
   /// the controller of [AnyVideoPlayer].
   final AnyVideoPlayerController controller;
 
-  /// Whether to automatically destroy the controller
-  final bool isAutoDisposeController;
-
-  const AnyVideoPlayer(
-      {super.key,
-      required this.controller,
-      this.isAutoDisposeController = true});
+  const AnyVideoPlayer({super.key, required this.controller});
 
   @override
   State<AnyVideoPlayer> createState() => _AnyVideoPlayerState();
@@ -65,20 +59,9 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
   }
 
   @override
-  void dispose() {
-    if (widget.isAutoDisposeController) {
-      widget.controller.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   void didUpdateWidget(AnyVideoPlayer oldWidget) {
     if (oldWidget.controller != widget.controller) {
       widget.controller.addPlayerEventListener(_onPlayerEvent);
-      if (oldWidget.isAutoDisposeController) {
-        oldWidget.controller.dispose();
-      }
     }
     super.didUpdateWidget(oldWidget);
   }

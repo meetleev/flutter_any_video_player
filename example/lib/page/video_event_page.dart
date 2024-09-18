@@ -52,7 +52,8 @@ class _VideoEventPageState extends State<VideoEventPage> {
   }
 
   void _loadVideo() {
-    // _anyVideoPlayerController?.dispose();
+    final oldAnyVideoPlayerController = _anyVideoPlayerController;
+    oldAnyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
         dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
     setState(() {});
@@ -81,6 +82,7 @@ class _VideoEventPageState extends State<VideoEventPage> {
 
   @override
   void dispose() {
+    _anyVideoPlayerController?.dispose();
     super.dispose();
   }
 }

@@ -85,6 +85,7 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   final StreamController _streamController = StreamController.broadcast();
 
   MediaDataExtractor? _mediaDataExtractor;
+  bool _isDisposed = false;
 
   AnyVideoPlayerController(
       {required this.dataSource,
@@ -96,7 +97,9 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
       this.customControls,
       this.isLive = false,
       bool isAutoInitialize = true,
+      bool isAutoPlay = false,
       bool frameByFrameEnabled = false,
+      bool isLoop = false,
       this.hideControlsTimer = _defaultHideControlsTimer,
       ControlsConfiguration? controlsConf})
       : controlsConfiguration = controlsConf ?? ControlsConfiguration(),
@@ -134,8 +137,15 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
         }
         break;
     }
-    if (isAutoInitialize) {
-      initialize();
+    if (isAutoInitialize || isAutoPlay) {
+      initialize().then((_) {
+        if (isLoop) {
+          setLooping(isLoop);
+        }
+        if (isAutoPlay) {
+          play();
+        }
+      });
     }
   }
 
@@ -148,6 +158,9 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
 
   /// emit event
   void emit<T>(T event) {
+    if (_isDisposed) {
+      return;
+    }
     if (!_streamController.isClosed) {
       _streamController.add(event);
     }
@@ -265,8 +278,13 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
 
   @override
   void dispose() async {
+    if (_isDisposed) {
+      return;
+    }
     await _streamController.close();
     await videoPlayerController.dispose();
+    _isDisposed = true;
+
     super.dispose();
   }
 
