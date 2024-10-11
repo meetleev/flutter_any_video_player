@@ -63,7 +63,6 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   /// Whether or not to show the playButton at all
   final bool showPlayButton;
 
-
   /// playback speeds
   final List<double> playbackSpeeds;
 
