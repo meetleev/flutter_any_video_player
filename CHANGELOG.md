@@ -2,10 +2,6 @@
 * Fixed same bugs.
 * Upgraded video_player to 2.9.2
 * Updates minimum supported SDK version to Flutter 3.19/Dart 3.3.
-
-## 0.1.1
-* The isAutoDisposeController is removed from the AnyVideoPlayer
-* Upgraded video_player to 2.9.1
   
 ## 0.1.0
 
