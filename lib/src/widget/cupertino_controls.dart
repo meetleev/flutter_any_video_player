@@ -34,22 +34,20 @@ class _CupertinoControlsState extends ControlsState<CupertinoControls> {
       alignment: AlignmentDirectional.center,
       children: [
         if (wasLoading) _buildLoading(),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: controlsConf.paddingBottom + bottomActionsHeight,
-          top: 0,
+        Positioned.fill(
+          // bottom: controlsConf.paddingBottom + bottomActionsHeight,
           child: buildHitArea(),
         ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: controlsConf.paddingBottom,
-          child: SizedBox(
-            height: bottomActionsHeight,
-            child: _buildBottomActions(),
+        if (anyVPController.showBottomControls)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: controlsConf.paddingBottom,
+            child: SizedBox(
+              height: bottomActionsHeight,
+              child: _buildBottomActions(),
+            ),
           ),
-        ),
       ],
     );
     return buildMain(

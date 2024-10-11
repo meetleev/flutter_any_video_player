@@ -131,22 +131,34 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
       onTap: () {
         if (!controller.value.isInitialized) return;
         if (controller.value.isPlaying) {
-          if (controlsVisible) {
-            changePlayerControlsVisible(false);
+          if (anyVPController.showBottomControls) {
+            if (controlsVisible) {
+              changePlayerControlsVisible(false);
+            } else {
+              _restartControlsTimer();
+            }
           } else {
-            _restartControlsTimer();
+            playPause();
           }
         } else {
           playPause();
         }
       },
-      child: CenterPlayButton(
-        backgroundColor: controlsConf.cupertinoBackgroundColor,
-        iconColor: controlsConf.cupertinoIconColor,
-        isFinished: isFinished,
-        isPlaying: controller.value.isPlaying,
-        show: showPlayButton,
-        onPressed: playPause,
+      child: Container(
+        color: Colors.transparent,
+        child: Container(
+          alignment: Alignment.center,
+          width: 72,
+          height: 72,
+          child: CenterPlayButton(
+            backgroundColor: controlsConf.cupertinoBackgroundColor,
+            iconColor: controlsConf.cupertinoIconColor,
+            isFinished: isFinished,
+            isPlaying: controller.value.isPlaying,
+            show: showPlayButton,
+            onPressed: playPause,
+          ),
+        ),
       ),
     );
   }

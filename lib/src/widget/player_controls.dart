@@ -78,14 +78,9 @@ class PlayerControls extends StatelessWidget {
     );
   }
 
-  Widget _buildControls(
-      BuildContext context, AnyVideoPlayerController anyVideoPlayerController) {
-    if (anyVideoPlayerController.showControls) {
-      return anyVideoPlayerController.customControls ??
-          _controlsAdapter(context);
-    }
-    return const SizedBox();
-  }
+  Widget _buildControls(BuildContext context,
+          AnyVideoPlayerController anyVideoPlayerController) =>
+      anyVideoPlayerController.customControls ?? _controlsAdapter(context);
 
   Widget _controlsAdapter(BuildContext context) {
     switch (Theme.of(context).platform) {

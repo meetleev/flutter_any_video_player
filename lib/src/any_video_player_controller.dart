@@ -58,10 +58,11 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   final Widget? placeholder;
 
   /// Whether or not to show the controls at all
-  final bool showControls;
+  final bool showBottomControls;
 
   /// Whether or not to show the playButton at all
   final bool showPlayButton;
+
 
   /// playback speeds
   final List<double> playbackSpeeds;
@@ -91,7 +92,7 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
       {required this.dataSource,
       this.backgroundColor,
       this.placeholder,
-      this.showControls = true,
+      this.showBottomControls = true,
       this.showPlayButton = true,
       this.playbackSpeeds = _defaultPlaybackSpeeds,
       this.customControls,

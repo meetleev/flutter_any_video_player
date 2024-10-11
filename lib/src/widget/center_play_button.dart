@@ -21,26 +21,24 @@ class CenterPlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: AnimatedOpacity(
-        opacity: show ? 1.0 : 0.0,
-        duration: const Duration(milliseconds: 300),
-        child: Container(
-          constraints: const BoxConstraints.tightFor(width: 72, height: 72),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            shape: BoxShape.circle,
-          ),
-          child: AdaptiveButton(
-            icon: isFinished
-                ? Icon(Icons.replay, color: iconColor, size: 32)
-                : AnimatedPlayPause(
-                    color: iconColor,
-                    playing: isPlaying,
-                    scale: 2,
-                  ),
-            onPressed: onPressed,
-          ),
+    return AnimatedOpacity(
+      opacity: show ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        constraints: const BoxConstraints.tightFor(width: 72, height: 72),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          shape: BoxShape.circle,
+        ),
+        child: AdaptiveButton(
+          icon: isFinished
+              ? Icon(Icons.replay, color: iconColor, size: 32)
+              : AnimatedPlayPause(
+                  color: iconColor,
+                  playing: isPlaying,
+                  scale: 2,
+                ),
+          onPressed: onPressed,
         ),
       ),
     );
