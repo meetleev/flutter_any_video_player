@@ -67,9 +67,7 @@ class PlayerControls extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         InteractiveViewer(
-          child: Center(
-            child: VideoPlayer(videoController),
-          ),
+          child: VideoPlayer(videoController),
         ),
         Positioned.fill(
           child: _buildControls(context, anyVideoPlayerController),

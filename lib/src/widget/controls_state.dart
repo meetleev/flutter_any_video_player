@@ -123,6 +123,7 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   }
 
   Widget buildHitArea() {
+    if (!anyVPController.showPlayButton) return const SizedBox.shrink();
     final bool showPlayButton = anyVPController.showPlayButton &&
         !controller.value.isPlaying &&
         !_dragging;
