@@ -1,4 +1,4 @@
-## 0.1.4
+## 0.1.5
 * Optimized code
 * Upgraded video_player to 2.9.3
 * Updates minimum supported SDK version to Flutter 3.22/Dart 3.4.
