@@ -1,4 +1,4 @@
-library any_video_player;
+library;
 
 export 'src/any_video_player.dart';
 export 'src/any_video_player_controller.dart';

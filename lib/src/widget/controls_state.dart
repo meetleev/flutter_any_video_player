@@ -265,9 +265,8 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
             )),
       ),
       onTap: () {
-        anyVPController
-            .setPlayBackSpeed(speed)
-            .then((value) => Navigator.of(context).pop());
+        anyVPController.setPlayBackSpeed(speed);
+        Navigator.of(context).pop();
       },
     );
   }
