@@ -131,7 +131,10 @@ class AdaptiveButton extends StatelessWidget {
         return IconButton(iconSize: iconSize, onPressed: onPressed, icon: icon);
       case TargetPlatform.iOS:
         return CupertinoButton(
-            minSize: iconSize, onPressed: onPressed, child: icon);
+          minimumSize: null != iconSize ? Size.fromRadius(iconSize!) : null,
+          onPressed: onPressed,
+          child: icon,
+        );
       default:
         return IconButton(iconSize: iconSize, onPressed: onPressed, icon: icon);
     }

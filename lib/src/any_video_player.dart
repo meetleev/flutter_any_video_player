@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'any_video_player_controller.dart';
+import 'configuration/controls_configuration.dart';
 import 'events/any_video_player_event.dart';
 import 'events/any_video_player_event_type.dart';
 import 'widget/player_controls.dart';
@@ -16,7 +17,8 @@ class AnyVideoPlayer extends StatefulWidget {
 }
 
 class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
-  get controlsConfiguration => widget.controller.controlsConfiguration;
+  ControlsConfiguration get controlsConfiguration =>
+      widget.controller.controlsConfiguration;
   Orientation? _orgOrientation;
 
   AnimatedWidget _defaultRoutePageBuilder(

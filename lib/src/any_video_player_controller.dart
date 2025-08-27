@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' if (dart.library.html) 'dart:js_interop';
 
-import 'package:any_video_player/src/widget/material_controls.dart';
-import 'package:any_video_player/src/widget/cupertino_controls.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:media_data_extractor/media_data_extractor.dart';
 import 'package:video_player/video_player.dart';
@@ -120,6 +119,14 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
             closedCaptionFile: dataSource.closedCaptionFile);
         break;
       case VideoPlayerDataSourceType.file:
+        if (kIsWeb) {
+          Future<void>.error(
+            UnimplementedError(
+              'web implementation of video_player cannot play local files',
+            ),
+          );
+          return;
+        }
         try {
           var file = File(dataSource.url);
           if (file.existsSync()) {
