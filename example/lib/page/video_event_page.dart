@@ -1,6 +1,7 @@
 import 'package:any_video_player/any_video_player.dart';
-import 'package:example/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
 
 class VideoEventPage extends StatefulWidget {
   const VideoEventPage({super.key});
@@ -55,27 +56,25 @@ class _VideoEventPageState extends State<VideoEventPage> {
     final oldAnyVideoPlayerController = _anyVideoPlayerController;
     oldAnyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
-        dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
+      dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
+    );
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('VideoPlayer Event'),
-      ),
+      appBar: AppBar(title: const Text('VideoPlayer Event')),
       body: null != _anyVideoPlayerController
-          ? Stack(children: [
-              AnyVideoPlayer(controller: _anyVideoPlayerController!),
-              Container(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  _event,
-                  style: const TextStyle(fontSize: 20),
+          ? Stack(
+              children: [
+                AnyVideoPlayer(controller: _anyVideoPlayerController!),
+                Container(
+                  alignment: Alignment.topCenter,
+                  child: Text(_event, style: const TextStyle(fontSize: 20)),
                 ),
-              )
-            ])
+              ],
+            )
           : Container(),
     );
   }

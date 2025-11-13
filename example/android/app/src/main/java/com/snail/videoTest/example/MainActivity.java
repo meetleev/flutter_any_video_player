@@ -1,4 +1,4 @@
-package com.snail.videoTest.example;
+package com.skyza.video_example;
 
 import io.flutter.embedding.android.FlutterActivity;
 

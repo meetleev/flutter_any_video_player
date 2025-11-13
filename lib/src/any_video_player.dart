@@ -22,10 +22,11 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
   Orientation? _orgOrientation;
 
   AnimatedWidget _defaultRoutePageBuilder(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      AnyVideoPlayerControllerProvider controllerProvider) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    AnyVideoPlayerControllerProvider controllerProvider,
+  ) {
     return AnimatedBuilder(
       animation: animation,
       builder: (BuildContext context, Widget? child) {
@@ -54,10 +55,9 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
       _orgOrientation = mediaData.orientation;
     }
     return AnyVideoPlayerControllerProvider(
-        controller: widget.controller,
-        child: PlayerControls(
-          controller: widget.controller,
-        ));
+      controller: widget.controller,
+      child: PlayerControls(controller: widget.controller),
+    );
   }
 
   @override
@@ -87,12 +87,14 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
       final mediaData = MediaQuery.of(context);
       if (_orgOrientation != mediaData.orientation) {
         if (Orientation.portrait == _orgOrientation) {
-          SystemChrome.setPreferredOrientations(
-              [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitDown,
+            DeviceOrientation.portraitUp,
+          ]);
         } else {
           SystemChrome.setPreferredOrientations([
             DeviceOrientation.landscapeLeft,
-            DeviceOrientation.landscapeRight
+            DeviceOrientation.landscapeRight,
           ]);
         }
       }
@@ -102,27 +104,40 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
   }
 
   Future<void> _enterFullScreen() async {
-    final TransitionRoute route = PageRouteBuilder(pageBuilder: (BuildContext c,
-        Animation<double> animation, Animation<double> secondaryAnimation) {
-      widget.controller.onEnterFullScreen();
-      final controllerProvider = AnyVideoPlayerControllerProvider(
-          controller: widget.controller,
-          child: PlayerControls(
-            controller: widget.controller,
-          ));
-      final routePageBuilder = _defaultRoutePageBuilder;
-      return routePageBuilder(
-          c, animation, secondaryAnimation, controllerProvider);
-    });
+    final TransitionRoute route = PageRouteBuilder(
+      pageBuilder:
+          (
+            BuildContext c,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) {
+            widget.controller.onEnterFullScreen();
+            final controllerProvider = AnyVideoPlayerControllerProvider(
+              controller: widget.controller,
+              child: PlayerControls(controller: widget.controller),
+            );
+            final routePageBuilder = _defaultRoutePageBuilder;
+            return routePageBuilder(
+              c,
+              animation,
+              secondaryAnimation,
+              controllerProvider,
+            );
+          },
+    );
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     final aspectRatio =
         widget.controller.videoPlayerController.value.aspectRatio;
     if (1 > aspectRatio) {
-      await SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.portraitUp,
+      ]);
     } else {
-      await SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
     }
     if (!mounted) return;
     await Navigator.of(context, rootNavigator: true).push(route);

@@ -11,8 +11,9 @@ class PlayerControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        Theme.of(context).textTheme.bodyLarge!.backgroundColor;
+    final backgroundColor = Theme.of(
+      context,
+    ).textTheme.bodyLarge!.backgroundColor;
     // if (controller.isFullScreen) {}
     final videoController = controller.videoPlayerController;
     return LayoutBuilder(
@@ -28,15 +29,21 @@ class PlayerControls extends StatelessWidget {
             double height =
                 constraints.maxWidth * fixSize.height / fixSize.width;
             fixConstraints = BoxConstraints.expand(
-                width: fixConstraints.maxWidth, height: height);
+              width: fixConstraints.maxWidth,
+              height: height,
+            );
           } else if (constraints.hasBoundedHeight) {
             double width =
                 constraints.maxHeight * fixSize.width / fixSize.height;
             fixConstraints = BoxConstraints.expand(
-                width: width, height: fixConstraints.maxHeight);
+              width: width,
+              height: fixConstraints.maxHeight,
+            );
           } else {
             fixConstraints = BoxConstraints.expand(
-                width: fixSize.width, height: fixSize.height);
+              width: fixSize.width,
+              height: fixSize.height,
+            );
           }
           needFix = true;
         }
@@ -48,17 +55,21 @@ class PlayerControls extends StatelessWidget {
                 : (controller.backgroundColor ?? backgroundColor),
             constraints: fixConstraints,
             child: _buildPlayerControls(
-                context,
-                Size(fixConstraints.maxWidth, fixConstraints.maxHeight),
-                controller),
+              context,
+              Size(fixConstraints.maxWidth, fixConstraints.maxHeight),
+              controller,
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildPlayerControls(BuildContext context, Size size,
-      AnyVideoPlayerController anyVideoPlayerController) {
+  Widget _buildPlayerControls(
+    BuildContext context,
+    Size size,
+    AnyVideoPlayerController anyVideoPlayerController,
+  ) {
     final videoController = anyVideoPlayerController.videoPlayerController;
     if (!videoController.value.isInitialized) {
       return anyVideoPlayerController.placeholder ?? Container();
@@ -66,19 +77,18 @@ class PlayerControls extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        InteractiveViewer(
-          child: VideoPlayer(videoController),
-        ),
+        InteractiveViewer(child: VideoPlayer(videoController)),
         Positioned.fill(
           child: _buildControls(context, anyVideoPlayerController),
-        )
+        ),
       ],
     );
   }
 
-  Widget _buildControls(BuildContext context,
-          AnyVideoPlayerController anyVideoPlayerController) =>
-      anyVideoPlayerController.customControls ?? _controlsAdapter(context);
+  Widget _buildControls(
+    BuildContext context,
+    AnyVideoPlayerController anyVideoPlayerController,
+  ) => anyVideoPlayerController.customControls ?? _controlsAdapter(context);
 
   Widget _controlsAdapter(BuildContext context) {
     switch (Theme.of(context).platform) {

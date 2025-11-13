@@ -1,6 +1,7 @@
 import 'package:any_video_player/any_video_player.dart';
-import 'package:example/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../constants.dart';
 
 class VideoFrameByFramePage extends StatefulWidget {
   const VideoFrameByFramePage({super.key});
@@ -20,21 +21,22 @@ class _VideoFrameByFramePageState extends State<VideoFrameByFramePage> {
 
   void _loadVideo() {
     _anyVideoPlayerController = AnyVideoPlayerController(
-        frameByFrameEnabled: true,
-        dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
+      frameByFrameEnabled: true,
+      dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
+    );
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('VideoPlayer Event'),
-      ),
+      appBar: AppBar(title: const Text('VideoPlayer Event')),
       body: null != _anyVideoPlayerController
-          ? Stack(children: [
-              AnyVideoPlayer(controller: _anyVideoPlayerController!),
-            ])
+          ? Stack(
+              children: [
+                AnyVideoPlayer(controller: _anyVideoPlayerController!),
+              ],
+            )
           : Container(),
     );
   }

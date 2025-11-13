@@ -1,20 +1,24 @@
+## 0.1.7
+* Updated minimum supported SDK version to Flutter 3.29/Dart 3.7.0
+* Fixed compilation errors encountered when using the package on the Web platform
+
 ## 0.1.6
 * Upgraded video_player to 2.10.0
-* Updates minimum supported SDK version to Flutter 3.27/Dart 3.6.
+* Updated minimum supported SDK version to Flutter 3.27/Dart 3.6.
   
 ## 0.1.5
 * Optimized code
 * Upgraded video_player to 2.9.3
-* Updates minimum supported SDK version to Flutter 3.22/Dart 3.4.
+* Updated minimum supported SDK version to Flutter 3.22/Dart 3.4.
   
 ## 0.1.3
 * Fixed some bugs.
 * Upgraded video_player to 2.9.2
-* Updates minimum supported SDK version to Flutter 3.19/Dart 3.3.
+* Updated minimum supported SDK version to Flutter 3.19/Dart 3.3.
   
 ## 0.1.0
 
-* Updates minimum supported SDK version to Flutter 3.16/Dart 3.2.
+* Updated minimum supported SDK version to Flutter 3.16/Dart 3.2.
 * Upgraded video_player to 2.8.7
 
 

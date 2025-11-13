@@ -6,5 +6,5 @@ enum AnyVideoPlayerEventType {
   seekTo,
   finished,
   controlsVisibleChange,
-  fullScreenChange
+  fullScreenChange,
 }

@@ -116,15 +116,13 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   }
 
   Widget buildMain({required Widget child}) {
-    return GestureDetector(
-      onTap: () => _restartControlsTimer(),
-      child: child,
-    );
+    return GestureDetector(onTap: () => _restartControlsTimer(), child: child);
   }
 
   Widget buildHitArea() {
     if (!anyVPController.showPlayButton) return const SizedBox.shrink();
-    final bool showPlayButton = anyVPController.showPlayButton &&
+    final bool showPlayButton =
+        anyVPController.showPlayButton &&
         !controller.value.isPlaying &&
         !_dragging;
 
@@ -202,9 +200,12 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   /// Called when player controls visibility should be changed.
   void changePlayerControlsVisible(bool visible) {
     setState(() {
-      anyVPController.emit(AnyVideoPlayerEvent(
+      anyVPController.emit(
+        AnyVideoPlayerEvent(
           eventType: AnyVideoPlayerEventType.controlsVisibleChange,
-          data: visible));
+          data: visible,
+        ),
+      );
       controlsVisible = visible;
     });
   }
@@ -212,30 +213,34 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   @protected
   Widget buildMoreOptionsRow(Widget leftAction, Widget rightAction) {
     return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [leftAction, rightAction]);
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [leftAction, rightAction],
+    );
   }
 
   @protected
   Widget buildFrameByFrameOption() {
     return buildMoreOptionsRow(
-        const Text('FBF Enabled'),
-        Switch(
-            value: anyVPController.isFrameByFrameEnabled,
-            onChanged: (bool selected) {
-              anyVPController.setFrameByFrameEnabled(selected);
-              Navigator.of(context).pop();
-            }));
+      const Text('FBF Enabled'),
+      Switch(
+        value: anyVPController.isFrameByFrameEnabled,
+        onChanged: (bool selected) {
+          anyVPController.setFrameByFrameEnabled(selected);
+          Navigator.of(context).pop();
+        },
+      ),
+    );
   }
 
   @protected
   Widget buildPlaybackSpeedOption({required VoidCallback onPressed}) {
     return buildMoreOptionsRow(
-        const Text('PlaybackSpeed'),
-        TextButton(
-          onPressed: onPressed,
-          child: Text('${anyVPController.playBackSpeed.toStringAsFixed(2)}X'),
-        ));
+      const Text('PlaybackSpeed'),
+      TextButton(
+        onPressed: onPressed,
+        child: Text('${anyVPController.playBackSpeed.toStringAsFixed(2)}X'),
+      ),
+    );
   }
 
   @protected
@@ -243,8 +248,12 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
     final List<double> speeds = anyVPController.playbackSpeeds;
     List<Widget> children = [];
     for (final speed in speeds) {
-      children.add(buildSpeedOptionRow(
-          speed: speed, selected: anyVPController.playBackSpeed == speed));
+      children.add(
+        buildSpeedOptionRow(
+          speed: speed,
+          selected: anyVPController.playBackSpeed == speed,
+        ),
+      );
       children.add(const Divider());
     }
     return children;
@@ -258,11 +267,9 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
         color: Colors.transparent,
         width: double.infinity,
         child: buildMoreOptionsRow(
-            Text('${speed}X'),
-            Offstage(
-              offstage: !selected,
-              child: const Icon(Icons.done),
-            )),
+          Text('${speed}X'),
+          Offstage(offstage: !selected, child: const Icon(Icons.done)),
+        ),
       ),
       onTap: () {
         anyVPController.setPlayBackSpeed(speed);

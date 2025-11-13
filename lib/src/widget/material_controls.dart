@@ -15,8 +15,11 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
   Widget build(BuildContext context) {
     final mediaData = MediaQuery.of(context);
     final videoSize = controller.value.size;
-    final widthScale = calculateVideo2ScreenWidthRatio(context, videoSize,
-        mediaData: mediaData);
+    final widthScale = calculateVideo2ScreenWidthRatio(
+      context,
+      videoSize,
+      mediaData: mediaData,
+    );
     final barHeight = 48.0 * 1.5 * (0 < widthScale ? widthScale : 1);
     final iconColor = Theme.of(context).textTheme.labelLarge!.color;
 
@@ -42,17 +45,17 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
       ],
     );
     return buildMain(
-        child: AbsorbPointer(
-            absorbing: !controlsVisible,
-            child: anyVPController.isFullScreen
-                ? SafeArea(child: controls)
-                : controls));
+      child: AbsorbPointer(
+        absorbing: !controlsVisible,
+        child: anyVPController.isFullScreen
+            ? SafeArea(child: controls)
+            : controls,
+      ),
+    );
   }
 
   Widget _buildLoading() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
+    return const Center(child: CircularProgressIndicator());
   }
 
   Widget _buildBottomBar(Color? iconColor, double barHeight) {
@@ -62,27 +65,27 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
       child: Container(
         color: controlsConf.materialBackgroundColor,
         height: barHeight,
-        margin: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
-                flex: 2,
-                child: Row(
-                  children: [
-                    if (anyVPController.isLive)
-                      Flexible(
-                          child: Text(
+              flex: 2,
+              child: Row(
+                children: [
+                  if (anyVPController.isLive)
+                    Flexible(
+                      child: Text(
                         'LIVE',
                         style: TextStyle(color: controlsConf.materialIconColor),
-                      ))
-                    else
-                      _buildPosition(iconColor),
-                  ],
-                )),
-            if (!anyVPController.isLive) _buildProgressBar()
+                      ),
+                    )
+                  else
+                    _buildPosition(iconColor),
+                ],
+              ),
+            ),
+            if (!anyVPController.isLive) _buildProgressBar(),
           ],
         ),
       ),
@@ -93,39 +96,44 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
     final position = controller.value.position;
     final duration = controller.value.duration;
     return RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          text: '${formatDuration(position)} ',
-          children: [
-            TextSpan(
-              text: '/ ${formatDuration(duration)}',
-              style: TextStyle(
-                fontSize: 14.0,
-                color: controlsConf.materialIconColor,
-                fontWeight: FontWeight.normal,
-              ),
-            )
-          ],
-          style: TextStyle(
-            fontSize: 14.0,
-            color: controlsConf.materialIconColor,
-            fontWeight: FontWeight.bold,
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        text: '${formatDuration(position)} ',
+        children: [
+          TextSpan(
+            text: '/ ${formatDuration(duration)}',
+            style: TextStyle(
+              fontSize: 14.0,
+              color: controlsConf.materialIconColor,
+              fontWeight: FontWeight.normal,
+            ),
           ),
-        ));
+        ],
+        style: TextStyle(
+          fontSize: 14.0,
+          color: controlsConf.materialIconColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 
   Widget _buildProgressBar() {
     return Flexible(
-        child: buildVideoProgressBarAdapter(
-      color: controlsConf.materialProgressColors ??
-          AnyVideoProgressColors(
-            playedColor: Theme.of(context).colorScheme.secondary,
-            handleColor: Theme.of(context).colorScheme.secondary,
-            bufferedColor:
-                Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
-            backgroundColor:
-                Theme.of(context).disabledColor.withValues(alpha: 0.5),
-          ),
-    ));
+      child: buildVideoProgressBarAdapter(
+        color:
+            controlsConf.materialProgressColors ??
+            AnyVideoProgressColors(
+              playedColor: Theme.of(context).colorScheme.secondary,
+              handleColor: Theme.of(context).colorScheme.secondary,
+              bufferedColor: Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: 0.5),
+              backgroundColor: Theme.of(
+                context,
+              ).disabledColor.withValues(alpha: 0.5),
+            ),
+      ),
+    );
   }
 }

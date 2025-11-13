@@ -1,9 +1,10 @@
 import 'package:any_video_player/any_video_player.dart';
-import 'package:example/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../constants.dart';
 
 class DataSourcePage extends StatefulWidget {
   const DataSourcePage({super.key});
@@ -14,8 +15,9 @@ class DataSourcePage extends StatefulWidget {
 
 class _DataSourcePageState extends State<DataSourcePage> {
   AnyVideoPlayerController? _anyVideoPlayerController;
-  final GroupButtonController _groupButtonController =
-      GroupButtonController(selectedIndex: 0);
+  final GroupButtonController _groupButtonController = GroupButtonController(
+    selectedIndex: 0,
+  );
 
   @override
   void initState() {
@@ -29,20 +31,23 @@ class _DataSourcePageState extends State<DataSourcePage> {
     switch (type) {
       case VideoPlayerDataSourceType.asset:
         _anyVideoPlayerController = AnyVideoPlayerController(
-            dataSource: VideoPlayerDataSource.asset(assetVideoUrl));
+          dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
+        );
         setState(() {});
         break;
       case VideoPlayerDataSourceType.network:
         _anyVideoPlayerController = AnyVideoPlayerController(
-            dataSource: VideoPlayerDataSource.network(remoteVideoUrl),
-            controlsConf: ControlsConfiguration(paddingBottom: 10));
+          dataSource: VideoPlayerDataSource.network(remoteVideoUrl),
+          controlsConf: ControlsConfiguration(paddingBottom: 10),
+        );
         setState(() {});
         break;
       case VideoPlayerDataSourceType.file:
         getTemporaryDirectory().then((directory) {
           final String url = '${directory.path}/$fileVideoName';
           _anyVideoPlayerController = AnyVideoPlayerController(
-              dataSource: VideoPlayerDataSource.file(url));
+            dataSource: VideoPlayerDataSource.file(url),
+          );
           setState(() {});
         });
         break;
@@ -56,16 +61,15 @@ class _DataSourcePageState extends State<DataSourcePage> {
       buttonLabs.add('file');
     }
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Data source'),
-      ),
+      appBar: AppBar(title: const Text('Data source')),
       body: null != _anyVideoPlayerController
-          ? Stack(children: [
-              AspectRatio(
+          ? Stack(
+              children: [
+                AspectRatio(
                   aspectRatio: 16 / 9,
-                  child:
-                      AnyVideoPlayer(controller: _anyVideoPlayerController!)),
-              Container(
+                  child: AnyVideoPlayer(controller: _anyVideoPlayerController!),
+                ),
+                Container(
                   alignment: Alignment.topCenter,
                   child: GroupButton(
                     controller: _groupButtonController,
@@ -74,8 +78,10 @@ class _DataSourcePageState extends State<DataSourcePage> {
                       _groupButtonController.selectIndex(idx);
                       _loadVideo(VideoPlayerDataSourceType.values[idx]);
                     },
-                  ))
-            ])
+                  ),
+                ),
+              ],
+            )
           : Container(),
     );
   }

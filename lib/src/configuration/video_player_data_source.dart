@@ -54,24 +54,24 @@ class VideoPlayerDataSource {
     this.headers = const {},
     this.videoPlayerOptions,
     this.closedCaptionFile,
-  })  : type = VideoPlayerDataSourceType.network,
-        package = null;
+  }) : type = VideoPlayerDataSourceType.network,
+       package = null;
 
   VideoPlayerDataSource.asset(
     this.url, {
     this.package,
     this.videoPlayerOptions,
     this.closedCaptionFile,
-  })  : type = VideoPlayerDataSourceType.asset,
-        videoFormat = null,
-        headers = const {};
+  }) : type = VideoPlayerDataSourceType.asset,
+       videoFormat = null,
+       headers = const {};
 
   VideoPlayerDataSource.file(
     this.url, {
     this.videoPlayerOptions,
     this.closedCaptionFile,
-  })  : type = VideoPlayerDataSourceType.file,
-        package = null,
-        videoFormat = null,
-        headers = const {};
+  }) : type = VideoPlayerDataSourceType.file,
+       package = null,
+       videoFormat = null,
+       headers = const {};
 }

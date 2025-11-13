@@ -121,8 +121,12 @@ class AdaptiveButton extends StatelessWidget {
   /// See [Icon], [ImageIcon].
   final Widget icon;
 
-  const AdaptiveButton(
-      {super.key, this.iconSize, this.onPressed, required this.icon});
+  const AdaptiveButton({
+    super.key,
+    this.iconSize,
+    this.onPressed,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {

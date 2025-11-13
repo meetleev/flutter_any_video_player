@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'dart:io' if (dart.library.html) 'dart:js_interop';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:media_data_extractor/media_data_extractor.dart';
 import 'package:video_player/video_player.dart';
 
 import 'configuration/controls_configuration.dart';
 import 'configuration/video_player_data_source.dart';
-import 'constants.dart';
 import 'events/any_video_player_event.dart';
 import 'events/any_video_player_event_type.dart';
+import 'video_file_loader_adapter.dart'
+    if (dart.library.io) 'file_loader_adapters/file_loader_io.dart'
+    if (dart.library.html) 'file_loader_adapters/file_loader_browser.dart';
 
 const _defaultHideControlsTimer = Duration(seconds: 3);
 const List<double> _defaultPlaybackSpeeds = [
@@ -24,7 +24,7 @@ const List<double> _defaultPlaybackSpeeds = [
   2,
   4,
   8,
-  16
+  16,
 ];
 
 class AnyVideoPlayerValue {
@@ -34,17 +34,22 @@ class AnyVideoPlayerValue {
   /// Flag used to store full screen mode state.
   final bool isFullScreen;
 
-  AnyVideoPlayerValue(
-      {this.frameByFrameEnabled = false,
-      this.videoData,
-      this.isFullScreen = false});
+  AnyVideoPlayerValue({
+    this.frameByFrameEnabled = false,
+    this.videoData,
+    this.isFullScreen = false,
+  });
 
-  AnyVideoPlayerValue copyWith(
-      {bool? frameByFrameEnabled, VideoData? videoData, bool? isFullScreen}) {
+  AnyVideoPlayerValue copyWith({
+    bool? frameByFrameEnabled,
+    VideoData? videoData,
+    bool? isFullScreen,
+  }) {
     return AnyVideoPlayerValue(
-        frameByFrameEnabled: frameByFrameEnabled ?? this.frameByFrameEnabled,
-        videoData: videoData ?? this.videoData,
-        isFullScreen: isFullScreen ?? this.isFullScreen);
+      frameByFrameEnabled: frameByFrameEnabled ?? this.frameByFrameEnabled,
+      videoData: videoData ?? this.videoData,
+      isFullScreen: isFullScreen ?? this.isFullScreen,
+    );
   }
 }
 
@@ -86,61 +91,52 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   MediaDataExtractor? _mediaDataExtractor;
   bool _isDisposed = false;
 
-  AnyVideoPlayerController(
-      {required this.dataSource,
-      this.backgroundColor,
-      this.placeholder,
-      this.showBottomControls = true,
-      this.showPlayButton = true,
-      this.playbackSpeeds = _defaultPlaybackSpeeds,
-      this.customControls,
-      this.isLive = false,
-      bool isAutoInitialize = true,
-      bool isAutoPlay = false,
-      bool frameByFrameEnabled = false,
-      bool isLoop = false,
-      this.hideControlsTimer = _defaultHideControlsTimer,
-      ControlsConfiguration? controlsConf})
-      : controlsConfiguration = controlsConf ?? ControlsConfiguration(),
-        super(AnyVideoPlayerValue(frameByFrameEnabled: frameByFrameEnabled)) {
+  AnyVideoPlayerController({
+    required this.dataSource,
+    this.backgroundColor,
+    this.placeholder,
+    this.showBottomControls = true,
+    this.showPlayButton = true,
+    this.playbackSpeeds = _defaultPlaybackSpeeds,
+    this.customControls,
+    this.isLive = false,
+    bool isAutoInitialize = true,
+    bool isAutoPlay = false,
+    bool frameByFrameEnabled = false,
+    bool isLoop = false,
+    this.hideControlsTimer = _defaultHideControlsTimer,
+    ControlsConfiguration? controlsConf,
+  }) : controlsConfiguration = controlsConf ?? ControlsConfiguration(),
+       super(AnyVideoPlayerValue(frameByFrameEnabled: frameByFrameEnabled)) {
     switch (dataSource.type) {
       case VideoPlayerDataSourceType.network:
         videoPlayerController = VideoPlayerController.networkUrl(
-            Uri.parse(dataSource.url),
-            videoPlayerOptions: dataSource.videoPlayerOptions,
-            httpHeaders: dataSource.headers,
-            closedCaptionFile: dataSource.closedCaptionFile,
-            formatHint: dataSource.videoFormat);
+          Uri.parse(dataSource.url),
+          videoPlayerOptions: dataSource.videoPlayerOptions,
+          httpHeaders: dataSource.headers,
+          closedCaptionFile: dataSource.closedCaptionFile,
+          formatHint: dataSource.videoFormat,
+        );
         break;
       case VideoPlayerDataSourceType.asset:
-        videoPlayerController = VideoPlayerController.asset(dataSource.url,
-            package: dataSource.package,
-            videoPlayerOptions: dataSource.videoPlayerOptions,
-            closedCaptionFile: dataSource.closedCaptionFile);
+        videoPlayerController = VideoPlayerController.asset(
+          dataSource.url,
+          package: dataSource.package,
+          videoPlayerOptions: dataSource.videoPlayerOptions,
+          closedCaptionFile: dataSource.closedCaptionFile,
+        );
         break;
       case VideoPlayerDataSourceType.file:
-        if (kIsWeb) {
-          Future<void>.error(
-            UnimplementedError(
-              'web implementation of video_player cannot play local files',
+        try {
+          videoPlayerController = getVideoPlayerControllerFromFile(dataSource);
+        } catch (e, s) {
+          FlutterError.presentError(
+            FlutterErrorDetails(
+              exception: e,
+              stack: s,
+              library: 'any_video_player',
             ),
           );
-          return;
-        }
-        try {
-          var file = File(dataSource.url);
-          if (file.existsSync()) {
-            videoPlayerController = VideoPlayerController.file(file,
-                videoPlayerOptions: dataSource.videoPlayerOptions,
-                closedCaptionFile: dataSource.closedCaptionFile);
-          } else {
-            FlutterError.presentError(const FlutterErrorDetails(
-                exception: 'file does not exists!',
-                library: Constants.libraryName));
-          }
-        } catch (e, s) {
-          FlutterError.presentError(FlutterErrorDetails(
-              exception: e, stack: s, library: Constants.libraryName));
         }
         break;
     }
@@ -175,7 +171,8 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
 
   /// Listen on the given [listener].
   StreamSubscription<AnyVideoPlayerEvent> addPlayerEventListener(
-      AnyVideoPlayerEventListener listener) {
+    AnyVideoPlayerEventListener listener,
+  ) {
     return on<AnyVideoPlayerEvent>().listen(listener);
   }
 
@@ -207,9 +204,12 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   bool get isFullScreen => value.isFullScreen;
 
   void toggleFullScreen() {
-    emit(AnyVideoPlayerEvent(
+    emit(
+      AnyVideoPlayerEvent(
         eventType: AnyVideoPlayerEventType.fullScreenChange,
-        data: !isFullScreen));
+        data: !isFullScreen,
+      ),
+    );
   }
 
   void onEnterFullScreen() {
@@ -237,8 +237,12 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
 
   Future<void> seekTo(Duration position) async {
     await videoPlayerController.seekTo(position);
-    emit(AnyVideoPlayerEvent(
-        eventType: AnyVideoPlayerEventType.seekTo, data: position));
+    emit(
+      AnyVideoPlayerEvent(
+        eventType: AnyVideoPlayerEventType.seekTo,
+        data: position,
+      ),
+    );
   }
 
   Future<void> setPlayBackSpeed(double speed) {
@@ -278,8 +282,9 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   Future<void> fetchVideoMetaData() async {
     _mediaDataExtractor ??= MediaDataExtractor();
     final dataType = MediaDataSourceType.values[dataSource.type.index];
-    VideoData videoData = await _mediaDataExtractor!
-        .getVideoData(MediaDataSource(type: dataType, url: dataSource.url));
+    VideoData videoData = await _mediaDataExtractor!.getVideoData(
+      MediaDataSource(type: dataType, url: dataSource.url),
+    );
     value = value.copyWith(videoData: videoData);
   }
 
@@ -296,8 +301,10 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   }
 
   static AnyVideoPlayerController of(BuildContext context) {
-    final provider = context.dependOnInheritedWidgetOfExactType<
-        AnyVideoPlayerControllerProvider>()!;
+    final provider = context
+        .dependOnInheritedWidgetOfExactType<
+          AnyVideoPlayerControllerProvider
+        >()!;
     return provider.controller;
   }
 }
@@ -305,8 +312,11 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
 class AnyVideoPlayerControllerProvider extends InheritedWidget {
   final AnyVideoPlayerController controller;
 
-  const AnyVideoPlayerControllerProvider(
-      {super.key, required super.child, required this.controller});
+  const AnyVideoPlayerControllerProvider({
+    super.key,
+    required super.child,
+    required this.controller,
+  });
 
   @override
   bool updateShouldNotify(AnyVideoPlayerControllerProvider oldWidget) =>

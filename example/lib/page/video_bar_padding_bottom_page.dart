@@ -1,7 +1,8 @@
 import 'package:any_video_player/any_video_player.dart';
-import 'package:example/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
+
+import '../constants.dart';
 
 class VideoBarPaddingBottomPage extends StatefulWidget {
   const VideoBarPaddingBottomPage({super.key});
@@ -13,8 +14,9 @@ class VideoBarPaddingBottomPage extends StatefulWidget {
 
 class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
   AnyVideoPlayerController? _anyVideoPlayerController;
-  final GroupButtonController _groupButtonController =
-      GroupButtonController(selectedIndex: 0);
+  final GroupButtonController _groupButtonController = GroupButtonController(
+    selectedIndex: 0,
+  );
 
   @override
   void initState() {
@@ -26,17 +28,16 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
     final oldAnyVideoPlayerController = _anyVideoPlayerController;
     oldAnyVideoPlayerController?.dispose();
     _anyVideoPlayerController = AnyVideoPlayerController(
-        dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
-        controlsConf: ControlsConfiguration(paddingBottom: paddingBottom));
+      dataSource: VideoPlayerDataSource.asset(assetVideoUrl),
+      controlsConf: ControlsConfiguration(paddingBottom: paddingBottom),
+    );
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('video bar padding bottom'),
-      ),
+      appBar: AppBar(title: const Text('video bar padding bottom')),
       body: null != _anyVideoPlayerController
           ? ListView(
               children: [
@@ -51,7 +52,7 @@ class _VideoBarPaddingBottomPageState extends State<VideoBarPaddingBottomPage> {
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: AnyVideoPlayer(controller: _anyVideoPlayerController!),
-                )
+                ),
               ],
             )
           : Container(),

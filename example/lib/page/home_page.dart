@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:example/constants.dart';
-import 'package:example/page/data_source_page.dart';
-import 'package:example/page/frame_by_frame_page.dart';
-import 'package:example/page/video_event_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../constants.dart';
+import 'data_source_page.dart';
+import 'frame_by_frame_page.dart';
 import 'video_bar_padding_bottom_page.dart';
+import 'video_event_page.dart';
 
 class MaterialHomePage extends StatefulWidget {
   const MaterialHomePage({super.key, required this.title});
@@ -30,12 +30,8 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('video test'),
-      ),
-      body: ListView(
-        children: [..._buildExampleWidgets()],
-      ),
+      appBar: AppBar(title: const Text('video test')),
+      body: ListView(children: [..._buildExampleWidgets()]),
     );
   }
 
@@ -63,7 +59,7 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
     );
   }
 
-  _buildExampleElementWidget(String name, Function() onClicked) {
+  Widget _buildExampleElementWidget(String name, Function() onClicked) {
     return InkWell(
       onTap: onClicked,
       child: Column(
@@ -73,10 +69,7 @@ class _MaterialHomePageState extends State<MaterialHomePage> {
             color: Colors.orange,
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(
-              name,
-              style: const TextStyle(fontSize: 18),
-            ),
+            child: Text(name, style: const TextStyle(fontSize: 18)),
           ),
           const Divider(),
         ],
