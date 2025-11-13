@@ -1,6 +1,6 @@
 # any_video_player
 [![Pub](https://img.shields.io/pub/v/any_video_player.svg?style=flat-square)](https://pub.dev/packages/any_video_player)
-[![support](https://img.shields.io/badge/platform-android%20|%20ios%20-blue.svg)](https://pub.dev/packages/any_video_player)
+[![support](https://img.shields.io/badge/platform-android%20|macos%20|%20ios%20-blue.svg)](https://pub.dev/packages/any_video_player)
 
 The video_player plugin gives low level access for the video playback. Advanced video player based on video_player.
 
