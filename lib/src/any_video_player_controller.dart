@@ -301,10 +301,11 @@ class AnyVideoPlayerController extends ValueNotifier<AnyVideoPlayerValue> {
   }
 
   static AnyVideoPlayerController of(BuildContext context) {
-    final provider = context
-        .dependOnInheritedWidgetOfExactType<
-          AnyVideoPlayerControllerProvider
-        >()!;
+    final provider =
+        context
+            .dependOnInheritedWidgetOfExactType<
+              AnyVideoPlayerControllerProvider
+            >()!;
     return provider.controller;
   }
 }

@@ -47,9 +47,8 @@ class MaterialControlsState extends ControlsState<MaterialControls> {
     return buildMain(
       child: AbsorbPointer(
         absorbing: !controlsVisible,
-        child: anyVPController.isFullScreen
-            ? SafeArea(child: controls)
-            : controls,
+        child:
+            anyVPController.isFullScreen ? SafeArea(child: controls) : controls,
       ),
     );
   }

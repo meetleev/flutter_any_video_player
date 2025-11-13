@@ -1,4 +1,4 @@
-## 0.1.7
+## 0.1.8
 * Updated minimum supported SDK version to Flutter 3.29/Dart 3.7.0
 * Fixed compilation errors encountered when using the package on the Web platform
 

@@ -11,9 +11,8 @@ class PlayerControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = Theme.of(
-      context,
-    ).textTheme.bodyLarge!.backgroundColor;
+    final backgroundColor =
+        Theme.of(context).textTheme.bodyLarge!.backgroundColor;
     // if (controller.isFullScreen) {}
     final videoController = controller.videoPlayerController;
     return LayoutBuilder(
@@ -21,9 +20,10 @@ class PlayerControls extends StatelessWidget {
         MediaQueryData mediaQueryData = MediaQuery.of(context);
         bool needFix = false;
         BoxConstraints fixConstraints = constraints;
-        Size fixSize = videoController.value.size.isEmpty
-            ? mediaQueryData.size
-            : videoController.value.size;
+        Size fixSize =
+            videoController.value.size.isEmpty
+                ? mediaQueryData.size
+                : videoController.value.size;
         if (!constraints.hasBoundedHeight || !constraints.hasBoundedWidth) {
           if (constraints.hasBoundedWidth) {
             double height =
@@ -50,9 +50,10 @@ class PlayerControls extends StatelessWidget {
         // debugPrint('fixConstraints:$fixConstraints');
         return Center(
           child: Container(
-            color: needFix
-                ? Colors.transparent
-                : (controller.backgroundColor ?? backgroundColor),
+            color:
+                needFix
+                    ? Colors.transparent
+                    : (controller.backgroundColor ?? backgroundColor),
             constraints: fixConstraints,
             child: _buildPlayerControls(
               context,

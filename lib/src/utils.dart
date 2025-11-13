@@ -21,23 +21,26 @@ String formatDuration(Duration position) {
   final minutes = seconds ~/ 60;
   seconds = seconds % 60;
 
-  final hoursString = hours >= 10
-      ? '$hours'
-      : hours == 0
-      ? '00'
-      : '0$hours';
+  final hoursString =
+      hours >= 10
+          ? '$hours'
+          : hours == 0
+          ? '00'
+          : '0$hours';
 
-  final minutesString = minutes >= 10
-      ? '$minutes'
-      : minutes == 0
-      ? '00'
-      : '0$minutes';
+  final minutesString =
+      minutes >= 10
+          ? '$minutes'
+          : minutes == 0
+          ? '00'
+          : '0$minutes';
 
-  final secondsString = seconds >= 10
-      ? '$seconds'
-      : seconds == 0
-      ? '00'
-      : '0$seconds';
+  final secondsString =
+      seconds >= 10
+          ? '$seconds'
+          : seconds == 0
+          ? '00'
+          : '0$seconds';
 
   final formattedTime =
       '${hoursString == '00' ? '' : '$hoursString:'}$minutesString:$secondsString';
@@ -61,8 +64,9 @@ double calculateVideo2ScreenWidthRatio(
   if (videoSize.isEmpty) return 0;
   mediaData ??= MediaQuery.of(context);
   final orientation = mediaData.orientation;
-  final width = orientation == Orientation.portrait
-      ? mediaData.size.width
-      : mediaData.size.height;
+  final width =
+      orientation == Orientation.portrait
+          ? mediaData.size.width
+          : mediaData.size.height;
   return width * mediaData.devicePixelRatio / videoSize.width;
 }

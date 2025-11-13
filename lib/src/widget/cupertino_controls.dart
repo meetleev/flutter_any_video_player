@@ -53,9 +53,8 @@ class _CupertinoControlsState extends ControlsState<CupertinoControls> {
     return buildMain(
       child: AbsorbPointer(
         absorbing: !controlsVisible,
-        child: anyVPController.isFullScreen
-            ? SafeArea(child: controls)
-            : controls,
+        child:
+            anyVPController.isFullScreen ? SafeArea(child: controls) : controls,
       ),
     );
   }
@@ -78,74 +77,78 @@ class _CupertinoControlsState extends ControlsState<CupertinoControls> {
               height: bottomActionsHeight,
               color: controlsConf.cupertinoBackgroundColor,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: _orientation == Orientation.portrait
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              const Spacer(),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _buildSkipBack(size: 24),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 15,
-                                    ),
-                                    child: _buildPlayPause(scale: 2),
-                                  ),
-                                  _buildSkipForward(size: 24),
-                                ],
-                              ),
-                              Flexible(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+              child:
+                  _orientation == Orientation.portrait
+                      ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                const Spacer(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _buildFullScreen(),
-                                    const SizedBox(width: 10),
-                                    _buildMoreOptions(),
+                                    _buildSkipBack(size: 24),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 15,
+                                      ),
+                                      child: _buildPlayPause(scale: 2),
+                                    ),
+                                    _buildSkipForward(size: 24),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: progressBarHeight,
-                            child: Row(
-                              children: [
-                                _buildPosition(),
-                                _buildProgressBar(),
-                                _buildRemaining(),
+                                Flexible(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      _buildFullScreen(),
+                                      const SizedBox(width: 10),
+                                      _buildMoreOptions(),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: progressBarHeight,
+                              child: Row(
+                                children: [
+                                  _buildPosition(),
+                                  _buildProgressBar(),
+                                  _buildRemaining(),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      : Row(
+                        children: [
+                          _buildSkipBack(),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              left: 6.0,
+                              right: 6.0,
+                            ),
+                            child: _buildPlayPause(),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(right: 8.0),
+                            child: _buildSkipForward(),
+                          ),
+                          _buildPosition(),
+                          _buildProgressBar(),
+                          _buildRemaining(),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: _buildFullScreen(),
                           ),
                         ],
                       ),
-                    )
-                  : Row(
-                      children: [
-                        _buildSkipBack(),
-                        Container(
-                          margin: const EdgeInsets.only(left: 6.0, right: 6.0),
-                          child: _buildPlayPause(),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(right: 8.0),
-                          child: _buildSkipForward(),
-                        ),
-                        _buildPosition(),
-                        _buildProgressBar(),
-                        _buildRemaining(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: _buildFullScreen(),
-                        ),
-                      ],
-                    ),
             ),
           ),
         ),
@@ -210,9 +213,10 @@ class _CupertinoControlsState extends ControlsState<CupertinoControls> {
 
   Widget _buildSkipBack({double size = 18}) {
     return GestureDetector(
-      onTap: anyVPController.isFrameByFrameEnabled
-          ? anyVPController.jumpPreviousFrame
-          : skipBack,
+      onTap:
+          anyVPController.isFrameByFrameEnabled
+              ? anyVPController.jumpPreviousFrame
+              : skipBack,
       child: Icon(
         anyVPController.isFrameByFrameEnabled
             ? CupertinoIcons.gobackward
@@ -225,9 +229,10 @@ class _CupertinoControlsState extends ControlsState<CupertinoControls> {
 
   GestureDetector _buildSkipForward({double size = 18}) {
     return GestureDetector(
-      onTap: anyVPController.isFrameByFrameEnabled
-          ? anyVPController.jumpNextFrame
-          : skipForward,
+      onTap:
+          anyVPController.isFrameByFrameEnabled
+              ? anyVPController.jumpNextFrame
+              : skipForward,
       child: Icon(
         anyVPController.isFrameByFrameEnabled
             ? CupertinoIcons.goforward

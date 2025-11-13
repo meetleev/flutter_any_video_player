@@ -184,16 +184,18 @@ abstract class ControlsState<T extends StatefulWidget> extends State<T> {
   void skipForward() {
     _restartControlsTimer();
     final end = controller.value.duration.inMilliseconds;
-    final skip = (controller.value.position + const Duration(seconds: 15))
-        .inMilliseconds;
+    final skip =
+        (controller.value.position + const Duration(seconds: 15))
+            .inMilliseconds;
     anyVPController.seekTo(Duration(milliseconds: min(skip, end)));
   }
 
   void skipBack() {
     _restartControlsTimer();
     final beginning = Duration.zero.inMilliseconds;
-    final skip = (controller.value.position - const Duration(seconds: 15))
-        .inMilliseconds;
+    final skip =
+        (controller.value.position - const Duration(seconds: 15))
+            .inMilliseconds;
     anyVPController.seekTo(Duration(milliseconds: max(skip, beginning)));
   }
 

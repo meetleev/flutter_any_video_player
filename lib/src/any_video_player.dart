@@ -105,25 +105,24 @@ class _AnyVideoPlayerState extends State<AnyVideoPlayer> {
 
   Future<void> _enterFullScreen() async {
     final TransitionRoute route = PageRouteBuilder(
-      pageBuilder:
-          (
-            BuildContext c,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            widget.controller.onEnterFullScreen();
-            final controllerProvider = AnyVideoPlayerControllerProvider(
-              controller: widget.controller,
-              child: PlayerControls(controller: widget.controller),
-            );
-            final routePageBuilder = _defaultRoutePageBuilder;
-            return routePageBuilder(
-              c,
-              animation,
-              secondaryAnimation,
-              controllerProvider,
-            );
-          },
+      pageBuilder: (
+        BuildContext c,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
+        widget.controller.onEnterFullScreen();
+        final controllerProvider = AnyVideoPlayerControllerProvider(
+          controller: widget.controller,
+          child: PlayerControls(controller: widget.controller),
+        );
+        final routePageBuilder = _defaultRoutePageBuilder;
+        return routePageBuilder(
+          c,
+          animation,
+          secondaryAnimation,
+          controllerProvider,
+        );
+      },
     );
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     final aspectRatio =

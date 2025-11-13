@@ -31,13 +31,14 @@ class CenterPlayButton extends StatelessWidget {
           shape: BoxShape.circle,
         ),
         child: AdaptiveButton(
-          icon: isFinished
-              ? Icon(Icons.replay, color: iconColor, size: 32)
-              : AnimatedPlayPause(
-                  color: iconColor,
-                  playing: isPlaying,
-                  scale: 2,
-                ),
+          icon:
+              isFinished
+                  ? Icon(Icons.replay, color: iconColor, size: 32)
+                  : AnimatedPlayPause(
+                    color: iconColor,
+                    playing: isPlaying,
+                    scale: 2,
+                  ),
           onPressed: onPressed,
         ),
       ),
